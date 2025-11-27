@@ -203,3 +203,4 @@ D:\Language-app\LanguageApp\LanguageApp\obj\Debug\net8.0\refint\LanguageApp.dll
 D:\Language-app\LanguageApp\LanguageApp\obj\Debug\net8.0\LanguageApp.pdb
 D:\Language-app\LanguageApp\LanguageApp\obj\Debug\net8.0\LanguageApp.genruntimeconfig.cache
 D:\Language-app\LanguageApp\LanguageApp\obj\Debug\net8.0\ref\LanguageApp.dll
+D:\Language-app\LanguageApp\LanguageApp\obj\Debug\net8.0\LanguageApp.sourcelink.json

@@ -6,7 +6,7 @@ public class Question
     public string QuestionText { get; set; } = string.Empty;
     public string? Explanation { get; set; }
 
-    public int LessonId { get; set; }
+    public int? LessonId { get; set; }
     public Lesson Lesson { get; set; } = default!;
 
     public List<Answer> Answers { get; set; } = new();

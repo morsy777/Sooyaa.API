@@ -10,8 +10,27 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
             .WithOwner()
             .HasForeignKey("UserId");
 
-        builder.Property(x => x.FirstName).HasMaxLength(100);
-        builder.Property(x => x.LastName).HasMaxLength(100);
-        builder.Property(x => x.IsPremium).HasDefaultValue(false);
+        builder
+            .HasIndex(x => x.Email)
+            .IsUnique();
+
+        builder
+            .Property(x => x.FirstName)
+            .HasMaxLength(100);
+
+        builder
+            .Property(x => x.LastName)
+            .HasMaxLength(100);
+
+        builder
+            .Property(x => x.IsPremium)
+            .HasDefaultValue(false);
+
+        builder
+            .HasOne(x => x.SelectedLevel)
+            .WithMany()
+            .HasForeignKey(x => x.SelectedLevelId)
+            .OnDelete(DeleteBehavior.Restrict);
+
     }
 }
