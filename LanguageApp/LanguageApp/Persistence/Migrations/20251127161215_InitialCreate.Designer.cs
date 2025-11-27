@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace LanguageApp.Migrations
+namespace LanguageApp.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251120134249_InitialCreate")]
+    [Migration("20251127161215_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -35,7 +35,8 @@ namespace LanguageApp.Migrations
 
                     b.Property<string>("AnswerText")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
@@ -47,7 +48,10 @@ namespace LanguageApp.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answer");
+                    b.HasIndex("AnswerText", "QuestionId")
+                        .IsUnique();
+
+                    b.ToTable("Answers");
                 });
 
             modelBuilder.Entity("LanguageApp.Entities.ApplicationUser", b =>
@@ -83,6 +87,9 @@ namespace LanguageApp.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("LevelId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -131,6 +138,12 @@ namespace LanguageApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
+                    b.HasIndex("LevelId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -154,11 +167,15 @@ namespace LanguageApp.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("LanguageApp.Entities.Chapter", b =>
@@ -169,19 +186,23 @@ namespace LanguageApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("LevelId")
+                    b.Property<int?>("LevelId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("OrderNumber")
                         .HasColumnType("int");
@@ -190,7 +211,10 @@ namespace LanguageApp.Migrations
 
                     b.HasIndex("LevelId");
 
-                    b.ToTable("Chapter");
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Chapters");
                 });
 
             modelBuilder.Entity("LanguageApp.Entities.Language", b =>
@@ -207,7 +231,7 @@ namespace LanguageApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Language");
+                    b.ToTable("Languages");
                 });
 
             modelBuilder.Entity("LanguageApp.Entities.Lesson", b =>
@@ -218,10 +242,10 @@ namespace LanguageApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ChapterId")
+                    b.Property<int?>("ChapterId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -233,7 +257,8 @@ namespace LanguageApp.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
@@ -241,7 +266,10 @@ namespace LanguageApp.Migrations
 
                     b.HasIndex("ChapterId");
 
-                    b.ToTable("Lesson");
+                    b.HasIndex("Title")
+                        .IsUnique();
+
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("LanguageApp.Entities.Level", b =>
@@ -254,24 +282,30 @@ namespace LanguageApp.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("LanguageId")
+                    b.Property<int?>("LanguageId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("Level");
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Levels");
                 });
 
             modelBuilder.Entity("LanguageApp.Entities.Question", b =>
@@ -283,20 +317,26 @@ namespace LanguageApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Explanation")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(600)
+                        .HasColumnType("nvarchar(600)");
 
-                    b.Property<int>("LessonId")
+                    b.Property<int?>("LessonId")
                         .HasColumnType("int");
 
                     b.Property<string>("QuestionText")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("Question");
+                    b.HasIndex("QuestionText", "LessonId")
+                        .IsUnique()
+                        .HasFilter("[LessonId] IS NOT NULL");
+
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("LanguageApp.Entities.UserAttempt", b =>
@@ -313,20 +353,26 @@ namespace LanguageApp.Migrations
                     b.Property<DateTime>("LastAttemptAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("QuestionId")
+                    b.Property<int?>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("QuestionId1")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("QuestionId1");
 
-                    b.ToTable("UserAttempt");
+                    b.HasIndex("UserId", "QuestionId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL AND [QuestionId] IS NOT NULL");
+
+                    b.ToTable("UserAttempts");
                 });
 
             modelBuilder.Entity("LanguageApp.Entities.UserLanguage", b =>
@@ -348,9 +394,10 @@ namespace LanguageApp.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "LanguageId")
+                        .IsUnique();
 
-                    b.ToTable("UserLanguage");
+                    b.ToTable("UserLanguages");
                 });
 
             modelBuilder.Entity("LanguageApp.Entities.UserProgress", b =>
@@ -378,9 +425,10 @@ namespace LanguageApp.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "LessonId")
+                        .IsUnique();
 
-                    b.ToTable("UserProgress");
+                    b.ToTable("UserProgresses");
                 });
 
             modelBuilder.Entity("LanguageApp.Entities.UserStreak", b =>
@@ -409,7 +457,7 @@ namespace LanguageApp.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserStreak");
+                    b.ToTable("UserStreaks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -558,9 +606,14 @@ namespace LanguageApp.Migrations
 
             modelBuilder.Entity("LanguageApp.Entities.ApplicationUser", b =>
                 {
-                    b.HasOne("LanguageApp.Entities.Level", "SelectedLevel")
+                    b.HasOne("LanguageApp.Entities.Level", null)
                         .WithMany("Users")
-                        .HasForeignKey("SelectedLevelId");
+                        .HasForeignKey("LevelId");
+
+                    b.HasOne("LanguageApp.Entities.Level", "SelectedLevel")
+                        .WithMany()
+                        .HasForeignKey("SelectedLevelId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.OwnsMany("LanguageApp.Entities.RefreshToken", "RefreshTokens", b1 =>
                         {
@@ -604,8 +657,7 @@ namespace LanguageApp.Migrations
                     b.HasOne("LanguageApp.Entities.Level", "Level")
                         .WithMany("Chapters")
                         .HasForeignKey("LevelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Level");
                 });
@@ -614,15 +666,11 @@ namespace LanguageApp.Migrations
                 {
                     b.HasOne("LanguageApp.Entities.Category", "Category")
                         .WithMany("Lessons")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("LanguageApp.Entities.Chapter", "Chapter")
                         .WithMany("Lessons")
-                        .HasForeignKey("ChapterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ChapterId");
 
                     b.Navigation("Category");
 
@@ -633,9 +681,7 @@ namespace LanguageApp.Migrations
                 {
                     b.HasOne("LanguageApp.Entities.Language", "Language")
                         .WithMany("Levels")
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LanguageId");
 
                     b.Navigation("Language");
                 });
@@ -645,8 +691,7 @@ namespace LanguageApp.Migrations
                     b.HasOne("LanguageApp.Entities.Lesson", "Lesson")
                         .WithMany("Questions")
                         .HasForeignKey("LessonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Lesson");
                 });
@@ -654,16 +699,16 @@ namespace LanguageApp.Migrations
             modelBuilder.Entity("LanguageApp.Entities.UserAttempt", b =>
                 {
                     b.HasOne("LanguageApp.Entities.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId");
+
+                    b.HasOne("LanguageApp.Entities.Question", null)
                         .WithMany("UserAttempts")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("QuestionId1");
 
                     b.HasOne("LanguageApp.Entities.ApplicationUser", "User")
                         .WithMany("UserAttempts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Question");
 

@@ -25,16 +25,16 @@ public class LessonConfiguration : IEntityTypeConfiguration<Lesson>
             .HasIndex(x => x.Title)
             .IsUnique();
 
-        builder
-            .HasOne(x => x.Chapter)
-            .WithMany(x => x.Lessons)
-            .HasForeignKey(x => x.ChapterId)
-            .OnDelete(DeleteBehavior.Restrict);
+        //builder
+        //    .HasOne(x => x.Chapter)
+        //    .WithMany(x => x.Lessons)
+        //    .HasForeignKey(x => x.ChapterId)
+        //    .OnDelete(DeleteBehavior.Restrict);
 
-        builder
-            .HasOne(x => x.Category)
-            .WithMany(x => x.Lessons)
-            .HasForeignKey(x => x.CategoryId)
-            .OnDelete(DeleteBehavior.Restrict);
+        //builder
+        //    .HasOne(x => x.Category)
+        //    .WithMany(x => x.Lessons)
+        //    .HasForeignKey(x => x.CategoryId)
+        //    .OnDelete(DeleteBehavior.Restrict);
     }
 }

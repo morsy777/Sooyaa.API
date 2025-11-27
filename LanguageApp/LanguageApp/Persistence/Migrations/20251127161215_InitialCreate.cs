@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace LanguageApp.Migrations
+namespace LanguageApp.Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -26,20 +26,20 @@ namespace LanguageApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Category",
+                name: "Categories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Category", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Language",
+                name: "Languages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -48,7 +48,7 @@ namespace LanguageApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Language", x => x.Id);
+                    table.PrimaryKey("PK_Languages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -73,25 +73,24 @@ namespace LanguageApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Level",
+                name: "Levels",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LanguageId = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    LanguageId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Level", x => x.Id);
+                    table.PrimaryKey("PK_Levels", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Level_Language_LanguageId",
+                        name: "FK_Levels_Languages_LanguageId",
                         column: x => x.LanguageId,
-                        principalTable: "Language",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Languages",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -106,6 +105,7 @@ namespace LanguageApp.Migrations
                     IsPremium = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     PremiumStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PremiumEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LevelId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -125,33 +125,39 @@ namespace LanguageApp.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_Level_SelectedLevelId",
-                        column: x => x.SelectedLevelId,
-                        principalTable: "Level",
+                        name: "FK_AspNetUsers_Levels_LevelId",
+                        column: x => x.LevelId,
+                        principalTable: "Levels",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Levels_SelectedLevelId",
+                        column: x => x.SelectedLevelId,
+                        principalTable: "Levels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Chapter",
+                name: "Chapters",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     OrderNumber = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LevelId = table.Column<int>(type: "int", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    LevelId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Chapter", x => x.Id);
+                    table.PrimaryKey("PK_Chapters", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Chapter_Level_LevelId",
+                        name: "FK_Chapters_Levels_LevelId",
                         column: x => x.LevelId,
-                        principalTable: "Level",
+                        principalTable: "Levels",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -263,7 +269,7 @@ namespace LanguageApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserLanguage",
+                name: "UserLanguages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -273,23 +279,23 @@ namespace LanguageApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserLanguage", x => x.Id);
+                    table.PrimaryKey("PK_UserLanguages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserLanguage_AspNetUsers_UserId",
+                        name: "FK_UserLanguages_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserLanguage_Language_LanguageId",
+                        name: "FK_UserLanguages_Languages_LanguageId",
                         column: x => x.LanguageId,
-                        principalTable: "Language",
+                        principalTable: "Languages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserStreak",
+                name: "UserStreaks",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -301,9 +307,9 @@ namespace LanguageApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserStreak", x => x.Id);
+                    table.PrimaryKey("PK_UserStreaks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserStreak_AspNetUsers_UserId",
+                        name: "FK_UserStreaks_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -311,57 +317,55 @@ namespace LanguageApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Lesson",
+                name: "Lessons",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderNumber = table.Column<int>(type: "int", nullable: false),
-                    ChapterId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    ChapterId = table.Column<int>(type: "int", nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Lesson", x => x.Id);
+                    table.PrimaryKey("PK_Lessons", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Lesson_Category_CategoryId",
+                        name: "FK_Lessons_Categories_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Category",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Categories",
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Lesson_Chapter_ChapterId",
+                        name: "FK_Lessons_Chapters_ChapterId",
                         column: x => x.ChapterId,
-                        principalTable: "Chapter",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Chapters",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Question",
+                name: "Questions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    QuestionText = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Explanation = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LessonId = table.Column<int>(type: "int", nullable: false)
+                    QuestionText = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Explanation = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: true),
+                    LessonId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Question", x => x.Id);
+                    table.PrimaryKey("PK_Questions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Question_Lesson_LessonId",
+                        name: "FK_Questions_Lessons_LessonId",
                         column: x => x.LessonId,
-                        principalTable: "Lesson",
+                        principalTable: "Lessons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserProgress",
+                name: "UserProgresses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -373,73 +377,83 @@ namespace LanguageApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserProgress", x => x.Id);
+                    table.PrimaryKey("PK_UserProgresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserProgress_AspNetUsers_UserId",
+                        name: "FK_UserProgresses_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserProgress_Lesson_LessonId",
+                        name: "FK_UserProgresses_Lessons_LessonId",
                         column: x => x.LessonId,
-                        principalTable: "Lesson",
+                        principalTable: "Lessons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Answer",
+                name: "Answers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AnswerText = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AnswerText = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false),
                     QuestionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Answer", x => x.Id);
+                    table.PrimaryKey("PK_Answers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Answer_Question_QuestionId",
+                        name: "FK_Answers_Questions_QuestionId",
                         column: x => x.QuestionId,
-                        principalTable: "Question",
+                        principalTable: "Questions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserAttempt",
+                name: "UserAttempts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AttemptsCountLeft = table.Column<int>(type: "int", nullable: false),
                     LastAttemptAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    QuestionId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    QuestionId = table.Column<int>(type: "int", nullable: true),
+                    QuestionId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserAttempt", x => x.Id);
+                    table.PrimaryKey("PK_UserAttempts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserAttempt_AspNetUsers_UserId",
+                        name: "FK_UserAttempts_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_UserAttempt_Question_QuestionId",
+                        name: "FK_UserAttempts_Questions_QuestionId",
                         column: x => x.QuestionId,
-                        principalTable: "Question",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Questions",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserAttempts_Questions_QuestionId1",
+                        column: x => x.QuestionId1,
+                        principalTable: "Questions",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Answer_QuestionId",
-                table: "Answer",
+                name: "IX_Answers_AnswerText_QuestionId",
+                table: "Answers",
+                columns: new[] { "AnswerText", "QuestionId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answers_QuestionId",
+                table: "Answers",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
@@ -475,6 +489,18 @@ namespace LanguageApp.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Email",
+                table: "AspNetUsers",
+                column: "Email",
+                unique: true,
+                filter: "[Email] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_LevelId",
+                table: "AspNetUsers",
+                column: "LevelId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_SelectedLevelId",
                 table: "AspNetUsers",
                 column: "SelectedLevelId");
@@ -487,63 +513,103 @@ namespace LanguageApp.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chapter_LevelId",
-                table: "Chapter",
+                name: "IX_Categories_Name",
+                table: "Categories",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Chapters_LevelId",
+                table: "Chapters",
                 column: "LevelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lesson_CategoryId",
-                table: "Lesson",
+                name: "IX_Chapters_Name",
+                table: "Chapters",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Lessons_CategoryId",
+                table: "Lessons",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lesson_ChapterId",
-                table: "Lesson",
+                name: "IX_Lessons_ChapterId",
+                table: "Lessons",
                 column: "ChapterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Level_LanguageId",
-                table: "Level",
+                name: "IX_Lessons_Title",
+                table: "Lessons",
+                column: "Title",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Levels_LanguageId",
+                table: "Levels",
                 column: "LanguageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Question_LessonId",
-                table: "Question",
+                name: "IX_Levels_Name",
+                table: "Levels",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Questions_LessonId",
+                table: "Questions",
                 column: "LessonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserAttempt_QuestionId",
-                table: "UserAttempt",
+                name: "IX_Questions_QuestionText_LessonId",
+                table: "Questions",
+                columns: new[] { "QuestionText", "LessonId" },
+                unique: true,
+                filter: "[LessonId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAttempts_QuestionId",
+                table: "UserAttempts",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserAttempt_UserId",
-                table: "UserAttempt",
-                column: "UserId");
+                name: "IX_UserAttempts_QuestionId1",
+                table: "UserAttempts",
+                column: "QuestionId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserLanguage_LanguageId",
-                table: "UserLanguage",
+                name: "IX_UserAttempts_UserId_QuestionId",
+                table: "UserAttempts",
+                columns: new[] { "UserId", "QuestionId" },
+                unique: true,
+                filter: "[UserId] IS NOT NULL AND [QuestionId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLanguages_LanguageId",
+                table: "UserLanguages",
                 column: "LanguageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserLanguage_UserId",
-                table: "UserLanguage",
-                column: "UserId");
+                name: "IX_UserLanguages_UserId_LanguageId",
+                table: "UserLanguages",
+                columns: new[] { "UserId", "LanguageId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserProgress_LessonId",
-                table: "UserProgress",
+                name: "IX_UserProgresses_LessonId",
+                table: "UserProgresses",
                 column: "LessonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserProgress_UserId",
-                table: "UserProgress",
-                column: "UserId");
+                name: "IX_UserProgresses_UserId_LessonId",
+                table: "UserProgresses",
+                columns: new[] { "UserId", "LessonId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserStreak_UserId",
-                table: "UserStreak",
+                name: "IX_UserStreaks_UserId",
+                table: "UserStreaks",
                 column: "UserId",
                 unique: true);
         }
@@ -552,7 +618,7 @@ namespace LanguageApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Answer");
+                name: "Answers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -573,40 +639,40 @@ namespace LanguageApp.Migrations
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
-                name: "UserAttempt");
+                name: "UserAttempts");
 
             migrationBuilder.DropTable(
-                name: "UserLanguage");
+                name: "UserLanguages");
 
             migrationBuilder.DropTable(
-                name: "UserProgress");
+                name: "UserProgresses");
 
             migrationBuilder.DropTable(
-                name: "UserStreak");
+                name: "UserStreaks");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Question");
+                name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Lesson");
+                name: "Lessons");
 
             migrationBuilder.DropTable(
-                name: "Category");
+                name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Chapter");
+                name: "Chapters");
 
             migrationBuilder.DropTable(
-                name: "Level");
+                name: "Levels");
 
             migrationBuilder.DropTable(
-                name: "Language");
+                name: "Languages");
         }
     }
 }

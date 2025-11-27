@@ -23,7 +23,7 @@ public class UserAttemptsConfiguration : IEntityTypeConfiguration<UserAttempt>
 
         builder
             .HasOne(x => x.Question)
-            .WithMany()
+            .WithMany(x => x.UserAttempts)
             .HasForeignKey(x => x.QuestionId);
     }
 }

@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace LanguageApp.Migrations
+namespace LanguageApp.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251126105400_AddEntitiesToAppDbContext")]
-    partial class AddEntitiesToAppDbContext
+    [Migration("20251127162411_QuestionAndUserAttemptsRelationship")]
+    partial class QuestionAndUserAttemptsRelationship
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,7 +35,8 @@ namespace LanguageApp.Migrations
 
                     b.Property<string>("AnswerText")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
@@ -46,6 +47,9 @@ namespace LanguageApp.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
+
+                    b.HasIndex("AnswerText", "QuestionId")
+                        .IsUnique();
 
                     b.ToTable("Answers");
                 });
@@ -83,6 +87,9 @@ namespace LanguageApp.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("LevelId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -131,6 +138,12 @@ namespace LanguageApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
+                    b.HasIndex("LevelId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -154,9 +167,13 @@ namespace LanguageApp.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Categories");
                 });
@@ -169,19 +186,23 @@ namespace LanguageApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("LevelId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("OrderNumber")
                         .HasColumnType("int");
@@ -189,6 +210,9 @@ namespace LanguageApp.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("LevelId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Chapters");
                 });
@@ -233,13 +257,17 @@ namespace LanguageApp.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("ChapterId");
+
+                    b.HasIndex("Title")
+                        .IsUnique();
 
                     b.ToTable("Lessons");
                 });
@@ -254,22 +282,28 @@ namespace LanguageApp.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("LanguageId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LanguageId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Levels");
                 });
@@ -283,18 +317,24 @@ namespace LanguageApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Explanation")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(600)
+                        .HasColumnType("nvarchar(600)");
 
                     b.Property<int?>("LessonId")
                         .HasColumnType("int");
 
                     b.Property<string>("QuestionText")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LessonId");
+
+                    b.HasIndex("QuestionText", "LessonId")
+                        .IsUnique()
+                        .HasFilter("[LessonId] IS NOT NULL");
 
                     b.ToTable("Questions");
                 });
@@ -323,7 +363,9 @@ namespace LanguageApp.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "QuestionId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL AND [QuestionId] IS NOT NULL");
 
                     b.ToTable("UserAttempts");
                 });
@@ -347,7 +389,8 @@ namespace LanguageApp.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "LanguageId")
+                        .IsUnique();
 
                     b.ToTable("UserLanguages");
                 });
@@ -377,7 +420,8 @@ namespace LanguageApp.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "LessonId")
+                        .IsUnique();
 
                     b.ToTable("UserProgresses");
                 });
@@ -557,9 +601,14 @@ namespace LanguageApp.Migrations
 
             modelBuilder.Entity("LanguageApp.Entities.ApplicationUser", b =>
                 {
-                    b.HasOne("LanguageApp.Entities.Level", "SelectedLevel")
+                    b.HasOne("LanguageApp.Entities.Level", null)
                         .WithMany("Users")
-                        .HasForeignKey("SelectedLevelId");
+                        .HasForeignKey("LevelId");
+
+                    b.HasOne("LanguageApp.Entities.Level", "SelectedLevel")
+                        .WithMany()
+                        .HasForeignKey("SelectedLevelId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.OwnsMany("LanguageApp.Entities.RefreshToken", "RefreshTokens", b1 =>
                         {
@@ -602,7 +651,8 @@ namespace LanguageApp.Migrations
                 {
                     b.HasOne("LanguageApp.Entities.Level", "Level")
                         .WithMany("Chapters")
-                        .HasForeignKey("LevelId");
+                        .HasForeignKey("LevelId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Level");
                 });
@@ -635,7 +685,8 @@ namespace LanguageApp.Migrations
                 {
                     b.HasOne("LanguageApp.Entities.Lesson", "Lesson")
                         .WithMany("Questions")
-                        .HasForeignKey("LessonId");
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Lesson");
                 });
