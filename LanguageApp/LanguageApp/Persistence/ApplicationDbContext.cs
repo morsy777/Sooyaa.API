@@ -14,6 +14,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<UserLanguage> UserLanguages { get; set; }
     public DbSet<UserProgress> UserProgresses { get; set; }
     public DbSet<UserStreak> UserStreaks { get; set; }
+    public DbSet<WordList> WordLists { get; set; }
 
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 

@@ -20,4 +20,5 @@ public sealed class ApplicationUser : IdentityUser
     public List<UserProgress> UserProgress { get; set; } = new();
     public UserStreak? UserStreak { get; set; } 
     public List<UserAttempt> UserAttempts { get; set; } = new();
+    public List<WordList> UserWords { get; set; } = new();
 }

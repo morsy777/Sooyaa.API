@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "F:\\.NET study\\Projects\\LearningAPP\\Project\\Sooyaa.API\\LanguageApp\\LanguageApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|f:\\.net study\\projects\\learningapp\\project\\sooyaa.api\\languageapp\\languageapp\\controllers\\homepagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:controllers\\homepagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|F:\\.NET study\\Projects\\LearningAPP\\Project\\Sooyaa.API\\LanguageApp\\LanguageApp\\Persistence\\Migrations\\20251130210125_addWordList.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Persistence\\Migrations\\20251130210125_addWordList.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,14 +23,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "HomePageController.cs",
-              "DocumentMoniker": "F:\\.NET study\\Projects\\LearningAPP\\Project\\Sooyaa.API\\LanguageApp\\LanguageApp\\Controllers\\HomePageController.cs",
-              "RelativeDocumentMoniker": "Controllers\\HomePageController.cs",
-              "ToolTip": "F:\\.NET study\\Projects\\LearningAPP\\Project\\Sooyaa.API\\LanguageApp\\LanguageApp\\Controllers\\HomePageController.cs",
-              "RelativeToolTip": "Controllers\\HomePageController.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABUAAAAwAAAAAAAAAA==",
+              "Title": "20251130210125_addWordList.cs",
+              "DocumentMoniker": "F:\\.NET study\\Projects\\LearningAPP\\Project\\Sooyaa.API\\LanguageApp\\LanguageApp\\Persistence\\Migrations\\20251130210125_addWordList.cs",
+              "RelativeDocumentMoniker": "Persistence\\Migrations\\20251130210125_addWordList.cs",
+              "ToolTip": "F:\\.NET study\\Projects\\LearningAPP\\Project\\Sooyaa.API\\LanguageApp\\LanguageApp\\Persistence\\Migrations\\20251130210125_addWordList.cs",
+              "RelativeToolTip": "Persistence\\Migrations\\20251130210125_addWordList.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAcwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-30T13:10:50.427Z",
+              "WhenOpened": "2025-11-30T21:01:25.726Z",
               "EditorCaption": ""
             }
           ]
