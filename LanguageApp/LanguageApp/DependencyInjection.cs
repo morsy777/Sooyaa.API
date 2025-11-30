@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Org.BouncyCastle.Tls;
 using LanguageApp.Settings;
+using LanguageApp.Application.Bussiness;
+using LanguageApp.Application.IBussiness;
+using LanguageApp.Mapping;
 
 namespace LanguageApp;
 
@@ -46,6 +49,13 @@ public static class DependencyInjection
         services.AddScoped<IEmailSender, EmailService>();
         services.Configure<MailSettings>(configuration.GetSection(nameof(MailSettings)));
         services.AddHttpContextAccessor();
+
+        // Other Services
+        services.AddScoped<ILanguageService,LanguageService>();
+        services.AddScoped<IhomeService,homeService>();
+
+        //other Mapping
+        TypeAdapterConfig.GlobalSettings.Scan(typeof(MappingHomePage).Assembly);
 
         return services;
     }
