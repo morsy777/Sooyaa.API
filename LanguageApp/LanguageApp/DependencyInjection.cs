@@ -53,9 +53,12 @@ public static class DependencyInjection
         // Other Services
         services.AddScoped<ILanguageService,LanguageService>();
         services.AddScoped<IhomeService,homeService>();
+        services.AddScoped<IWordListService, WordListService>();
+        services.AddScoped<ILessonService, LessonService>();
 
         //other Mapping
         TypeAdapterConfig.GlobalSettings.Scan(typeof(MappingHomePage).Assembly);
+        TypeAdapterConfig.GlobalSettings.Scan(typeof(MappingWordList).Assembly);
 
         return services;
     }

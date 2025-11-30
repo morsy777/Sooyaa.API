@@ -1,7 +1,9 @@
-﻿namespace LanguageApp.Application.IBussiness
+﻿using LanguageApp.DTOS;
+
+namespace LanguageApp.Application.IBussiness
 {
     public interface ILanguageService
     {
-        Task<IEnumerable<Language>> GetAllLanguagesAsync();
+        Task<IEnumerable<LanguagesDTO>> GetAllLanguagesAsync();
     }
 }

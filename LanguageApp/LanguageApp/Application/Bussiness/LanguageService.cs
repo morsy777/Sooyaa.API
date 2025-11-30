@@ -1,4 +1,5 @@
 ﻿using LanguageApp.Application.IBussiness;
+using LanguageApp.DTOS;
 
 namespace LanguageApp.Application.Bussiness
 {
@@ -10,9 +11,11 @@ namespace LanguageApp.Application.Bussiness
         {
             _dbContext = dbContext;
         }
-        public async Task<IEnumerable<Language>> GetAllLanguagesAsync()
+        public async Task<IEnumerable<LanguagesDTO>> GetAllLanguagesAsync()
         {
-            return await _dbContext.Languages.ToListAsync();
+            var languages = await _dbContext.Languages.ToListAsync();
+
+            return languages.Adapt<IEnumerable<LanguagesDTO>>();
         }
 
     }
