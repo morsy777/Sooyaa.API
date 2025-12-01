@@ -15,6 +15,14 @@ public class AccountController(IUserService userService) : ControllerBase
         return Ok(result.Value);
     }
 
+    [HttpPut("upload-profile-image")]
+    public async Task<IActionResult> UploadProfileImage([FromForm] UploadProfileImageRequest request)
+    {
+        await _userService.UploadProfileImg(User.GetUserId()!, request.Image);
+
+        return NoContent();
+    }
+
     [HttpPut("info")]
     public async Task<IActionResult> Info([FromBody] UpdateProfileRequest request)
     {

@@ -326,5 +326,21 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LanguageApp.Controllers.AccountController",
+    "Method": "UploadProfileImage",
+    "RelativePath": "me/upload-profile-image",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Image",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

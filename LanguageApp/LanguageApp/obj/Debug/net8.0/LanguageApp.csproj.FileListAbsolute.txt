@@ -411,3 +411,4 @@ F:\.NET study\Projects\LearningAPP\Project\Sooyaa.API\LanguageApp\LanguageApp\ob
 F:\.NET study\Projects\LearningAPP\Project\Sooyaa.API\LanguageApp\LanguageApp\obj\Debug\net8.0\LanguageApp.genruntimeconfig.cache
 F:\.NET study\Projects\LearningAPP\Project\Sooyaa.API\LanguageApp\LanguageApp\obj\Debug\net8.0\ref\LanguageApp.dll
 F:\.NET study\Projects\LearningAPP\Project\Sooyaa.API\LanguageApp\LanguageApp\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+D:\Language-app\LanguageApp\LanguageApp\bin\Debug\net8.0\LanguageApp.staticwebassets.runtime.json
