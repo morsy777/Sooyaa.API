@@ -4,6 +4,7 @@ using LanguageApp.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LanguageApp.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251204102405_AddUniqueIndexForChapterPerLevel")]
+    partial class AddUniqueIndexForChapterPerLevel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -263,9 +266,8 @@ namespace LanguageApp.Persistence.Migrations
 
                     b.HasIndex("ChapterId");
 
-                    b.HasIndex("Title", "ChapterId")
-                        .IsUnique()
-                        .HasFilter("[ChapterId] IS NOT NULL");
+                    b.HasIndex("Title")
+                        .IsUnique();
 
                     b.ToTable("Lessons");
                 });

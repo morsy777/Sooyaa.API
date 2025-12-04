@@ -10,7 +10,7 @@ public class Chapter
 
     public DateTime? CreatedAt { get; set; }
 
-    public int? LevelId { get; set; }
+    public int LevelId { get; set; }
     public Level Level { get; set; } = default!;
 
     public List<Lesson> Lessons { get; set; } = new();

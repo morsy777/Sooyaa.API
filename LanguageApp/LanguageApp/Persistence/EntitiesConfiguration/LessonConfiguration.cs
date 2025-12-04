@@ -22,8 +22,8 @@ public class LessonConfiguration : IEntityTypeConfiguration<Lesson>
             .IsRequired();
 
         builder
-            .HasIndex(x => x.Title)
-            .IsUnique();
+         .HasIndex(x => new { x.Title, x.ChapterId })
+         .IsUnique();
 
         //builder
         //    .HasOne(x => x.Chapter)
