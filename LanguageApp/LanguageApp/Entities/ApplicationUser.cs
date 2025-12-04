@@ -16,9 +16,9 @@ public sealed class ApplicationUser : IdentityUser
     public DateTime? PremiumEndDate { get; set; }
 
     // Relationships
-    public List<UserLanguage> UserLanguages { get; set; } = new();
-    public List<UserProgress> UserProgress { get; set; } = new();
+    public ICollection<UserLanguage> UserLanguages { get; set; } = new List<UserLanguage>();
+    public ICollection<UserProgress> UserProgress { get; set; } = new List<UserProgress>();
     public UserStreak? UserStreak { get; set; } 
-    public List<UserAttempt> UserAttempts { get; set; } = new();
-    public List<WordList> UserWords { get; set; } = new();
+    public ICollection<UserAttempt> UserAttempts { get; set; } = new List<UserAttempt>();
+    public ICollection<WordList> UserWords { get; set; } = new List<WordList>();
 }
