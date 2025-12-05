@@ -1,4 +1,5 @@
-﻿using Hangfire;
+
+using Hangfire;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Org.BouncyCastle.Tls;
 using LanguageApp.Settings;
@@ -28,7 +29,6 @@ public static class DependencyInjection
                        .AllowCredentials();
             });
         });
-
 
 
         var connectionString = configuration.GetConnectionString("DefaultConnection") ??
@@ -61,6 +61,7 @@ public static class DependencyInjection
         services.AddScoped<IWordListService, WordListService>();
         services.AddScoped<ILessonService, LessonService>();
         services.AddScoped<IDashboardService, DashboardService>();
+        services.AddScoped<IAdminService, AdminService>();
 
         //other Mapping
         TypeAdapterConfig.GlobalSettings.Scan(typeof(MappingHomePage).Assembly);
@@ -158,4 +159,6 @@ public static class DependencyInjection
 
         return services;
     }
+
+
 }

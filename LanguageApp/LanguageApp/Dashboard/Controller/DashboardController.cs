@@ -11,10 +11,12 @@ namespace LanguageApp.Dashboard.Controller
     public class DashboardController : ControllerBase
     {
         private readonly IDashboardService _dashboardService;
+        private readonly IAdminService _adminService;
 
-        public DashboardController(IDashboardService dashboardService)
+        public DashboardController(IDashboardService dashboardService, IAdminService adminService)
         {
             _dashboardService = dashboardService;
+            _adminService = adminService;
         }
 
         // ======================================================
@@ -456,6 +458,17 @@ namespace LanguageApp.Dashboard.Controller
         }
         #endregion
 
+        // ======================================================
+        //                  Admin ENDPOINTS
+        // ======================================================
+
+        [HttpPut("prompote-to-admin/{userId}")]
+        public async Task<IActionResult> PrompoteToAdmin([FromBody] string userId)
+        {
+            var isAdded = await _adminService.PromoteToAdminAsync(userId);
+
+            return isAdded ? NoContent() : BadRequest("Invalid User Id");
+        }
 
     }
 }
