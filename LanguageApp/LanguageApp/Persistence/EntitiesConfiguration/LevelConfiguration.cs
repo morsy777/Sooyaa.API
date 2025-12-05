@@ -23,7 +23,7 @@ public class LevelConfiguration : IEntityTypeConfiguration<Level>
             .HasMaxLength(300);
 
         builder
-            .HasIndex(x => x.Name)
+            .HasIndex(x => new { x.Name, x.LanguageId })
             .IsUnique();
 
         builder

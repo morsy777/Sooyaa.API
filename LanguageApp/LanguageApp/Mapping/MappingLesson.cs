@@ -6,7 +6,11 @@ namespace LanguageApp.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-           config.NewConfig<Lesson, LessonDTO>();
+            config.NewConfig<Lesson, LessonDTO>();
+
+
+            config.NewConfig<LessonDTORequest, Lesson>();
+
         }
     }
 }

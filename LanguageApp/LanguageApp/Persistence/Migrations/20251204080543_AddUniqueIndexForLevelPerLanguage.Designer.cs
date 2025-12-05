@@ -4,6 +4,7 @@ using LanguageApp.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LanguageApp.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251204080543_AddUniqueIndexForLevelPerLanguage")]
+    partial class AddUniqueIndexForLevelPerLanguage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,7 +196,7 @@ namespace LanguageApp.Persistence.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("LevelId")
+                    b.Property<int?>("LevelId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -208,7 +211,7 @@ namespace LanguageApp.Persistence.Migrations
 
                     b.HasIndex("LevelId");
 
-                    b.HasIndex("Name", "LevelId")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("Chapters");
@@ -263,9 +266,8 @@ namespace LanguageApp.Persistence.Migrations
 
                     b.HasIndex("ChapterId");
 
-                    b.HasIndex("Title", "ChapterId")
-                        .IsUnique()
-                        .HasFilter("[ChapterId] IS NOT NULL");
+                    b.HasIndex("Title")
+                        .IsUnique();
 
                     b.ToTable("Lessons");
                 });
@@ -283,7 +285,7 @@ namespace LanguageApp.Persistence.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("LanguageId")
+                    b.Property<int?>("LanguageId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -301,7 +303,8 @@ namespace LanguageApp.Persistence.Migrations
                     b.HasIndex("LanguageId");
 
                     b.HasIndex("Name", "LanguageId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[LanguageId] IS NOT NULL");
 
                     b.ToTable("Levels");
                 });
@@ -680,8 +683,7 @@ namespace LanguageApp.Persistence.Migrations
                     b.HasOne("LanguageApp.Entities.Level", "Level")
                         .WithMany("Chapters")
                         .HasForeignKey("LevelId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Level");
                 });
@@ -705,9 +707,7 @@ namespace LanguageApp.Persistence.Migrations
                 {
                     b.HasOne("LanguageApp.Entities.Language", "Language")
                         .WithMany("Levels")
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LanguageId");
 
                     b.Navigation("Language");
                 });

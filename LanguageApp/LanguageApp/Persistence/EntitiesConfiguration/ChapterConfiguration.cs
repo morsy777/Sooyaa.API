@@ -27,7 +27,7 @@ public class ChapterConfiguration : IEntityTypeConfiguration<Chapter>
             .IsRequired();
 
         builder
-            .HasIndex(x => x.Name)
+            .HasIndex(x => new { x.Name, x.LevelId })
             .IsUnique();
 
         builder

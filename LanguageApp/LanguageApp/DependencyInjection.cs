@@ -5,6 +5,8 @@ using LanguageApp.Settings;
 using LanguageApp.Application.Bussiness;
 using LanguageApp.Application.IBussiness;
 using LanguageApp.Mapping;
+using LanguageApp.Dashboard.Interface;
+using LanguageApp.Dashboard.Service;
 
 namespace LanguageApp;
 
@@ -55,6 +57,8 @@ public static class DependencyInjection
         services.AddScoped<IhomeService,homeService>();
         services.AddScoped<IWordListService, WordListService>();
         services.AddScoped<ILessonService, LessonService>();
+        services.AddScoped<IDashboardService, DashboardService>();
+        services.AddScoped<IAdminService, AdminService>();
 
         //other Mapping
         TypeAdapterConfig.GlobalSettings.Scan(typeof(MappingHomePage).Assembly);
