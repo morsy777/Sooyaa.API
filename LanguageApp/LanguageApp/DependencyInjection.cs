@@ -19,13 +19,16 @@ public static class DependencyInjection
         var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<string[]>();
 
         services.AddCors(options =>
-            options.AddDefaultPolicy(builder =>
-                builder
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .WithOrigins(allowedOrigins!)
-            )
-        );
+        {
+            options.AddPolicy("AllowFrontend", builder =>
+            {
+                builder.WithOrigins("http://localhost:5173")
+                       .AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .AllowCredentials();
+            });
+        });
+
 
 
         var connectionString = configuration.GetConnectionString("DefaultConnection") ??

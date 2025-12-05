@@ -5,6 +5,8 @@ global using System.IdentityModel.Tokens.Jwt;
 global using System.ComponentModel.DataAnnotations;
 global using System.Security.Cryptography;
 global using LanguageApp.DTOS;
+global using System.ComponentModel.DataAnnotations.Schema;
+
 
 global using Mapster;
 global using MapsterMapper;
