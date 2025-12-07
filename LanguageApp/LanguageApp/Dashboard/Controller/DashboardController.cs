@@ -462,8 +462,8 @@ namespace LanguageApp.Dashboard.Controller
         //                  Admin ENDPOINTS
         // ======================================================
 
-        [HttpPut("prompote-to-admin/{userId}")]
-        public async Task<IActionResult> PrompoteToAdmin([FromBody] string userId)
+        [HttpPut("prompoteToAdmin/{userId}")]
+        public async Task<IActionResult> PrompoteToAdmin(string userId)
         {
             var isAdded = await _adminService.PromoteToAdminAsync(userId);
 
