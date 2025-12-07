@@ -7,12 +7,16 @@ public class UserService(UserManager<ApplicationUser> userManager, IWebHostEnvir
     private readonly string _profileImagesDirPath = $"{webHostEnvironment.WebRootPath}/profileImages";
 
 
-    public async Task<Result<UserProfileResponse>> GetProfileAsync(string userId)
+    public async Task<Result<UserProfileResponse>> GetProfileAsync(string userId, HttpRequest request)
     {
         var user = await _userManager.Users
             .Where(x => x.Id == userId)
             .ProjectToType<UserProfileResponse>()
             .SingleAsync();
+
+        var baseUrl = $"{request.Scheme}://{request.Host}";
+
+        user = user with { profileImage = $"{baseUrl}/me/get-profile-image" };
 
         return Result.Success(user);
     }
@@ -65,4 +69,15 @@ public class UserService(UserManager<ApplicationUser> userManager, IWebHostEnvir
 
         return Result.Success();
     }
+
+//    public async Task<Result<ProfileImageResponse>> GetProfileImageAsync(string userId)
+//    {
+//        var imageUrl = _userManager.Users
+//            .Where(x => x.Id == userId)
+//            .Select(x => x.profileImage);
+
+
+
+//        return Result.Success(imageUrl);
+//    }
 }

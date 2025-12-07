@@ -42,4 +42,6 @@ app.UseHangfireDashboard("/jobs", new DashboardOptions
 // Map Controllers
 app.MapControllers();
 
+app.UseStaticFiles();
+
 app.Run();
