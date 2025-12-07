@@ -1,4 +1,5 @@
-﻿using Hangfire;
+
+using Hangfire;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Org.BouncyCastle.Tls;
 using LanguageApp.Settings;
@@ -19,13 +20,15 @@ public static class DependencyInjection
         var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<string[]>();
 
         services.AddCors(options =>
-            options.AddDefaultPolicy(builder =>
-                builder
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .WithOrigins(allowedOrigins!)
-            )
-        );
+        {
+            options.AddPolicy("AllowFrontend", builder =>
+            {
+                builder.WithOrigins("http://localhost:5173")
+                       .AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .AllowCredentials();
+            });
+        });
 
 
         var connectionString = configuration.GetConnectionString("DefaultConnection") ??
@@ -156,4 +159,6 @@ public static class DependencyInjection
 
         return services;
     }
+
+
 }

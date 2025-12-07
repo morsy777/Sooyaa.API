@@ -3,18 +3,29 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDependencies(builder.Configuration);
 
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ============================
+//    MIDDLEWARE PIPELINE
+// ============================
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseHangfireDashboard();
+// Swagger (can be first)
+app.UseSwagger();
+app.UseSwaggerUI();
 
-
+// HTTPS Redirect
 app.UseHttpsRedirection();
 
+// ------------------------------------------
+// CORS MUST COME BEFORE AUTH & CONTROLLERS
+// ------------------------------------------
+app.UseCors("AllowFrontend");
+
+// Authentication & Authorization
+app.UseAuthentication();
+app.UseAuthorization();
+
+// Hangfire Dashboard
 app.UseHangfireDashboard("/jobs", new DashboardOptions
 {
     Authorization =
@@ -26,19 +37,9 @@ app.UseHangfireDashboard("/jobs", new DashboardOptions
         }
     ],
     DashboardTitle = "Survery Basket Dashboard",
-    //IsReadOnlyFunc = (DashboardContext context) => true
 });
 
-//RecurringJob.AddOrUpdate<INotificationService>(
-//    "Daily-notification-job",
-//    x => x.SendNewPollsNotification(null),
-//    Cron.Daily(17, 30)
-//);
-
-app.UseCors();
-
-app.UseAuthorization();
-
+// Map Controllers
 app.MapControllers();
 
-app.Run(); 
+app.Run();

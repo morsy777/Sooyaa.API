@@ -1,4 +1,5 @@
-﻿namespace LanguageApp.Entities;
+﻿
+namespace LanguageApp.Entities;
 
 public sealed class ApplicationUser : IdentityUser
 {
@@ -9,6 +10,8 @@ public sealed class ApplicationUser : IdentityUser
     public List<RefreshToken> RefreshTokens { get; set; } = [];
 
     public int? SelectedLevelId { get; set; }
+
+    [ForeignKey(nameof(SelectedLevelId))]
     public Level? SelectedLevel { get; set; }
 
     public bool IsPremium { get; set; }
