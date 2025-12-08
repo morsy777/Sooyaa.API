@@ -24,17 +24,5 @@ public class LessonConfiguration : IEntityTypeConfiguration<Lesson>
         builder
          .HasIndex(x => new { x.Title, x.ChapterId })
          .IsUnique();
-
-        //builder
-        //    .HasOne(x => x.Chapter)
-        //    .WithMany(x => x.Lessons)
-        //    .HasForeignKey(x => x.ChapterId)
-        //    .OnDelete(DeleteBehavior.Restrict);
-
-        //builder
-        //    .HasOne(x => x.Category)
-        //    .WithMany(x => x.Lessons)
-        //    .HasForeignKey(x => x.CategoryId)
-        //    .OnDelete(DeleteBehavior.Restrict);
     }
 }

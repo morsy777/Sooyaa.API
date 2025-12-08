@@ -11,5 +11,5 @@ public class Level
     public Language Language { get; set; } = default!;
 
     public List<Chapter> Chapters { get; set; } = new();
-    public List<ApplicationUser> Users { get; set; } = new(); 
+    public List<UserLanguage> UserLanguages { get; set; } = new();
 }

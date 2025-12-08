@@ -9,7 +9,7 @@ public class UserLanguagesConfiguration : IEntityTypeConfiguration<UserLanguage>
             .HasKey(x => x.Id);
 
         builder
-            .HasIndex(x => new { x.UserId, x.LanguageId })
+            .HasIndex(x => new { x.UserId, x.LanguageId, x.LevelId })
             .IsUnique();
 
         builder

@@ -10,5 +10,4 @@ public class Question
     public Lesson Lesson { get; set; } = default!;
 
     public List<Answer> Answers { get; set; } = new();
-    public List<UserAttempt> UserAttempts { get; set; } = new();
 }

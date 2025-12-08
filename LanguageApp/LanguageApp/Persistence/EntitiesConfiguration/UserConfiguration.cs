@@ -26,11 +26,5 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
             .Property(x => x.IsPremium)
             .HasDefaultValue(false);
 
-        builder
-            .HasOne(x => x.SelectedLevel)
-            .WithMany()
-            .HasForeignKey(x => x.SelectedLevelId)
-            .OnDelete(DeleteBehavior.Restrict);
-
     }
 }

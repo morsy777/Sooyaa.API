@@ -1,5 +1,4 @@
-﻿
-namespace LanguageApp.Entities;
+﻿namespace LanguageApp.Entities;
 
 public sealed class ApplicationUser : IdentityUser
 {
@@ -9,11 +8,6 @@ public sealed class ApplicationUser : IdentityUser
 
     public List<RefreshToken> RefreshTokens { get; set; } = [];
 
-    public int? SelectedLevelId { get; set; }
-
-    [ForeignKey(nameof(SelectedLevelId))]
-    public Level? SelectedLevel { get; set; }
-
     public bool IsPremium { get; set; }
     public DateTime? PremiumStartDate { get; set; }
     public DateTime? PremiumEndDate { get; set; }
@@ -22,6 +16,5 @@ public sealed class ApplicationUser : IdentityUser
     public ICollection<UserLanguage> UserLanguages { get; set; } = new List<UserLanguage>();
     public ICollection<UserProgress> UserProgress { get; set; } = new List<UserProgress>();
     public UserStreak? UserStreak { get; set; } 
-    public ICollection<UserAttempt> UserAttempts { get; set; } = new List<UserAttempt>();
     public ICollection<WordList> UserWords { get; set; } = new List<WordList>();
 }
