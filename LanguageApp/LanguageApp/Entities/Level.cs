@@ -10,6 +10,6 @@ public class Level
     public int LanguageId { get; set; }
     public Language Language { get; set; } = default!;
 
-    public List<Chapter> Chapters { get; set; } = new();
-    public List<UserLanguage> UserLanguages { get; set; } = new();
+    public ICollection<Chapter> Chapters { get; set; } = new List<Chapter>();
+    public ICollection<UserLanguage> UserLanguages { get; set; } = new List<UserLanguage>();
 }

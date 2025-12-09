@@ -10,7 +10,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Lesson> Lessons { get; set; }
     public DbSet<Level> Levels { get; set; }
     public DbSet<Question> Questions { get; set; }
-    public DbSet<UserAttempt> UserAttempts { get; set; }
     public DbSet<UserLanguage> UserLanguages { get; set; }
     public DbSet<UserProgress> UserProgresses { get; set; }
     public DbSet<UserStreak> UserStreaks { get; set; }

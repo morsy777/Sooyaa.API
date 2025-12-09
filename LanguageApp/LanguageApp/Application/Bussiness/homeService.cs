@@ -15,25 +15,7 @@ namespace LanguageApp.Application.Bussiness
 
         public async Task<homePageDTO> GetHomePageDataAsync(string userId, CancellationToken cancellationToken)
         {
-
-            var user = await _dbContext.Users
-                .Include(u => u.UserStreak)
-                .Include(u => u.SelectedLevel)
-                .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
-
-            if (user is null)
-                return null!;
-
-
-            var categories = await _dbContext.Categories
-                .Select(c => c.Name)
-                .ToListAsync(cancellationToken);
-
-            var homePage = user.Adapt<homePageDTO>();
-            homePage.Categories = categories;
-
-
-            return homePage;
+            throw new NotImplementedException();
         }
 
 

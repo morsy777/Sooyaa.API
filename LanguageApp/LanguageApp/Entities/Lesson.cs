@@ -13,6 +13,6 @@ public class Lesson
     public int? CategoryId { get; set; }
     public Category Category { get; set; } = default!; // Vocab, Grammar or other
 
-    public List<Question> Questions { get; set; } = new();
-    public List<UserProgress> UserProgress { get; set; } = new();
+    public ICollection<Question> Questions { get; set; } = new List<Question>();
+    public ICollection<UserProgress> UserProgress { get; set; } = new List<UserProgress>();
 }

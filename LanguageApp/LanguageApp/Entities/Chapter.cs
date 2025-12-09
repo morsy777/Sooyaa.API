@@ -13,5 +13,5 @@ public class Chapter
     public int LevelId { get; set; }
     public Level Level { get; set; } = default!;
 
-    public List<Lesson> Lessons { get; set; } = new();
+    public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
 }
