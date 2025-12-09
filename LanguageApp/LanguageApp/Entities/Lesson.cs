@@ -15,4 +15,6 @@ public class Lesson
 
     public ICollection<Question> Questions { get; set; } = new List<Question>();
     public ICollection<UserProgress> UserProgress { get; set; } = new List<UserProgress>();
+    public ICollection<SavedLesson> SavedLessons { get; set; }=new List<SavedLesson>();
+
 }

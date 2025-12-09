@@ -16,13 +16,13 @@ namespace LanguageApp.Controllers
             _wordListService = wordListService;
         }
 
-        #region Get All Word Lists for a User
+        #region Get WordList for a User for a Language
 
-        [HttpGet("getAllWordLists/{userId}")]
+        [HttpGet("getLanWordList/{userId}/{LanId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllWordLists(string userId,CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllWordLists(string userId,int LanId,CancellationToken cancellationToken)
         {
-            var wordLists = await _wordListService.getAllWordListAsync(userId,cancellationToken);
+            var wordLists = await _wordListService.getLanWordListAsync(userId,LanId,cancellationToken);
             return Ok(wordLists);
         }
         #endregion

@@ -23,12 +23,16 @@ public static class DependencyInjection
         {
             options.AddPolicy("AllowFrontend", builder =>
             {
-                builder.WithOrigins("http://localhost:5173")
-                       .AllowAnyHeader()
-                       .AllowAnyMethod()
-                       .AllowCredentials();
+                builder.WithOrigins(
+                        "http://localhost:5173",
+                        "https://sooyaa-dashboard.vercel.app"
+                    )
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
         });
+
 
 
         var connectionString = configuration.GetConnectionString("DefaultConnection") ??
@@ -64,7 +68,6 @@ public static class DependencyInjection
         services.AddScoped<IAdminService, AdminService>();
 
         //other Mapping
-        TypeAdapterConfig.GlobalSettings.Scan(typeof(MappingHomePage).Assembly);
         TypeAdapterConfig.GlobalSettings.Scan(typeof(MappingWordList).Assembly);
 
         return services;

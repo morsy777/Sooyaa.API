@@ -17,4 +17,6 @@ public sealed class ApplicationUser : IdentityUser
     public ICollection<UserProgress> UserProgress { get; set; } = new List<UserProgress>();
     public UserStreak? UserStreak { get; set; } 
     public ICollection<WordList> UserWords { get; set; } = new List<WordList>();
+    public ICollection<SavedLesson> SavedLessons { get; set; }=new List<SavedLesson>();
+
 }

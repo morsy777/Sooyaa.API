@@ -92,5 +92,8 @@ namespace LanguageApp.Dashboard.Interface
         //Delete Answer
         Task<bool> DeleteAnswerAsync(int answerId, CancellationToken cancellationToken);
 
+
+        //================== Category Management =================//
+        Task<IEnumerable<CategoryDTO>> GetAllCategoriesAsync(CancellationToken cancellationToken);
     }
 }

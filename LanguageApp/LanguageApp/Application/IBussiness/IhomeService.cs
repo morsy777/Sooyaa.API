@@ -4,6 +4,6 @@ namespace LanguageApp.Application.IBussiness
 {
     public interface IhomeService
     {
-        Task<homePageDTO> GetHomePageDataAsync(string userId,CancellationToken cancellationToken);
+        Task<homePageDTO> GetHomePageDataAsync(string userId,int LanId,CancellationToken cancellationToken);
     }
 }

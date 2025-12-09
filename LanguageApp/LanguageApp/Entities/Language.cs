@@ -8,4 +8,6 @@ public class Language
     public ICollection<UserLanguage> UserLanguages { get; set; } = new List<UserLanguage>();
     public ICollection<Level> Levels { get; set; } = new List<Level>();
     public ICollection<WordList> WordLists { get; set; } = new List<WordList>();
+    public ICollection<SavedLesson> SavedLessons { get; set; }=new List<SavedLesson>();
+
 }
