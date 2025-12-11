@@ -1,6 +1,7 @@
 ﻿using LanguageApp.Dashboard.Interface;
 using LanguageApp.DTOS;
 using LanguageApp.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace LanguageApp.Dashboard.Service
 {
@@ -556,6 +557,21 @@ namespace LanguageApp.Dashboard.Service
 
             return categories;
         }
+
+        public async Task<IEnumerable<CategoryDTO>> GetCategoriesByLanIdAsync(int LanId, CancellationToken cancellationToken)
+        {
+            var categories = await _dbContext.Categories
+                .Where(c => c.LanguageId == LanId)
+                .Select(c => new CategoryDTO
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToListAsync(cancellationToken);
+
+            return categories;
+        }
+
 
 
     }

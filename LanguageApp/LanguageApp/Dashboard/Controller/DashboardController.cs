@@ -472,6 +472,19 @@ namespace LanguageApp.Dashboard.Controller
         }
         #endregion
 
+        #region get Category by Language id
+        [HttpGet("getCategoryByLanguageId/{languageId}")]
+        [ProducesResponseType(typeof(IEnumerable<CategoryDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> getCategoryByLanguageId(int languageId, CancellationToken cancellationToken)
+        {
+            if (languageId <= 0)
+                return BadRequest(new { Message = "Invalid languageID." });
+            var Categories = await _dashboardService.GetCategoriesByLanIdAsync(languageId, cancellationToken);
+            return Ok(Categories);
+        }
+        #endregion
+
         // ======================================================
         //                  Admin ENDPOINTS
         // ======================================================
