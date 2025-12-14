@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\langImages\" />
     <Folder Include="wwwroot\profileImages\" />
   </ItemGroup>
 

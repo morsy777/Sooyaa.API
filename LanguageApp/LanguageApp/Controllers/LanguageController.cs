@@ -23,14 +23,30 @@ namespace LanguageApp.Controllers
         public async Task<IActionResult> GetAllLanguages()
         {
             var languages = await _languageService.GetAllLanguagesAsync();
-           if (languages == null || !languages.Any())
+            if (languages == null || !languages.Any())
             {
-                return NotFound(new {Message ="No Language Found !"});
+                return NotFound(new { Message = "No Language Found !" });
             }
             return Ok(languages);
         }
         #endregion
 
-        
+        [HttpPost("upload-lang-image")]
+        public async Task<IActionResult> UploadLanguageImage([FromForm] UploadLanguageImageRequestDto request)
+        {
+            await _languageService.UploadLanguageImageAsync(request);
+            return Created();
+        }
+
+        [HttpGet("get-lang-image/{languageId}")]
+        public async Task<IActionResult> GetLanguageImage([FromRoute] int languageId)
+        {
+            var result = await _languageService.GetLanguageImageAsync(languageId, Request);
+
+            if (result == null)
+                return BadRequest("There is no Image");
+
+            return Ok(result);
+        }
     }
 }
