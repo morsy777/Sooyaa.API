@@ -18,7 +18,6 @@ namespace LanguageApp.Application.Bussiness
 
             var user = await _dbContext.Users
                 .Include(u => u.UserStreak)
-                .Include(u => u.SelectedLevel)
                 .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
 
             if (user is null)

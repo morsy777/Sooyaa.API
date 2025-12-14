@@ -17,9 +17,9 @@ namespace LanguageApp.Persistence.EntitiesConfiguration
                .IsRequired()
                .HasMaxLength(200);
 
-            builder.Property(w => w.EnglishWord)
-                .IsRequired()
-                .HasMaxLength(200);
+            //builder.Property(w => w.EnglishWord)
+            //    .IsRequired()
+            //    .HasMaxLength(200);
 
 
             builder.HasIndex(w => new { w.UserId, w.ArabicWord })
