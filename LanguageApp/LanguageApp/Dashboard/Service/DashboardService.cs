@@ -8,10 +8,12 @@ namespace LanguageApp.Dashboard.Service
     public class DashboardService : IDashboardService
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IMediaService _mediaService;
 
-        public DashboardService(ApplicationDbContext dbContext)
+        public DashboardService(ApplicationDbContext dbContext,IMediaService mediaService)
         {
             _dbContext = dbContext;
+            _mediaService = mediaService;
         }
 
         //================== Language Management =================//
@@ -357,6 +359,20 @@ namespace LanguageApp.Dashboard.Service
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return true;
+        }
+        public async Task<string> AddMediaToLessonAsync(int lessonId, IFormFile file, CancellationToken cancellationToken)
+        {
+            var lesson = await _dbContext.Lessons.FindAsync(new object[] { lessonId }, cancellationToken);
+            if (lesson == null)
+                throw new Exception("Lesson not found");
+
+            string folder = "lessons/media"; // optional folder structure
+            var url = await _mediaService.UploadAsync(file, folder);
+
+            lesson.MediaUrl = url; // save URL in DB
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return url;
         }
 
         //================== Question Management =================//

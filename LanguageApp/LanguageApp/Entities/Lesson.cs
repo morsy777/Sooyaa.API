@@ -7,6 +7,9 @@ public class Lesson
     public string Content { get; set; } = string.Empty;
     public int OrderNumber { get; set; }
 
+    public string? MediaUrl { get; set; }
+
+
     public int? ChapterId { get; set; }
     public Chapter Chapter { get; set; } = default!;
 

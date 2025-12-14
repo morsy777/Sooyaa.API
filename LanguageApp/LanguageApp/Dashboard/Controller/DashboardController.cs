@@ -311,6 +311,25 @@ namespace LanguageApp.Dashboard.Controller
 
         #endregion
 
+        #region Upload media to lesson
+        [HttpPost("{lessonId}/upload-media")]
+        public async Task<IActionResult> UploadMedia(int lessonId, [FromForm] MediaUploadRequestDTO request, CancellationToken cancellationToken)
+        {
+            if (request.File == null ||request.File.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            try
+            {
+                var url = await _dashboardService.AddMediaToLessonAsync(lessonId, request.File, cancellationToken);
+                return Ok(new { url });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+        #endregion
+
         // ======================================================
         //                  Questions ENDPOINTS
         // ======================================================

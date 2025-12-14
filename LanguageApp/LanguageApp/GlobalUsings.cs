@@ -6,6 +6,7 @@ global using System.ComponentModel.DataAnnotations;
 global using System.Security.Cryptography;
 global using LanguageApp.DTOS;
 global using System.ComponentModel.DataAnnotations.Schema;
+global using LanguageApp.Application.IBussiness;
 
 
 global using Mapster;
@@ -49,5 +50,6 @@ global using MailKit.Security;
 global using Hangfire;
 global using HangfireBasicAuthenticationFilter;
 
+global using CloudinaryDotNet;
 
 

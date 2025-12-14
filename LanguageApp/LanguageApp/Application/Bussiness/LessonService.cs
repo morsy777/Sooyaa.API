@@ -12,10 +12,7 @@ namespace LanguageApp.Application.Bussiness
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<LessonDTO>> GetAllLessonsForLanguageForCategoryAsync(
-            int languageId,
-            int categoryId,
-            CancellationToken cancellationToken)
+        public async Task<IEnumerable<LessonDTO>> GetAllLessonsForLanguageForCategoryAsync(int languageId,int categoryId,CancellationToken cancellationToken)
         {
             var lessons = await _dbContext.Lessons
                 .Where(l =>
@@ -38,52 +35,61 @@ namespace LanguageApp.Application.Bussiness
 
             return lessons;
         }
-  
-        public async Task<string> AddLessonToSavedLessonsAsync(SaveLessonRequestDTO dTO, CancellationToken cancellationToken)
+        public async Task<string> AddLessonToSavedLessonsAsync(SaveLessonRequestDTO dto,CancellationToken cancellationToken)
         {
-            // Check if user exists
-            bool userExists = await _dbContext.Users
-                .AnyAsync(u => u.Id == dTO.userId, cancellationToken);
-
-            if (!userExists)
+            if (!await _dbContext.Users
+                .AsNoTracking()
+                .AnyAsync(u => u.Id == dto.userId, cancellationToken))
                 return "User not found!";
 
-            // Check if lesson exists for the selected language through Chapter -> Level -> Language
             bool lessonExists = await _dbContext.Lessons
-                .Include(l => l.Chapter)
-                    .ThenInclude(c => c.Level)
-                        .ThenInclude(lv => lv.Language)
+                .AsNoTracking()
                 .AnyAsync(l =>
-                    l.Id == dTO.lessonId &&
-                    l.Chapter.Level.Language.Id == dTO.LanId,
+                    l.Id == dto.lessonId &&
+                    l.Chapter.Level.LanguageId == dto.LanId,
                     cancellationToken);
 
             if (!lessonExists)
                 return "Lesson not found for this language!";
 
-            // Check if lesson already saved for this user & language
             bool alreadySaved = await _dbContext.savedLessons
+                .AsNoTracking()
                 .AnyAsync(sl =>
-                    sl.UserId == dTO.userId &&
-                    sl.LessonId == dTO.lessonId &&
-                    sl.LanguageId == dTO.LanId,
+                    sl.UserId == dto.userId &&
+                    sl.LessonId == dto.lessonId &&
+                    sl.LanguageId == dto.LanId,
                     cancellationToken);
 
             if (alreadySaved)
                 return "Lesson already saved!";
 
-            // Save the lesson
-            var entity = new SavedLesson
+            await _dbContext.savedLessons.AddAsync(new SavedLesson
             {
-                UserId = dTO.userId,
-                LessonId = dTO.lessonId,
-                LanguageId = dTO.LanId
-            };
+                UserId = dto.userId,
+                LessonId = dto.lessonId,
+                LanguageId = dto.LanId
+            }, cancellationToken);
 
-            await _dbContext.savedLessons.AddAsync(entity, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return "Lesson saved successfully!";
+        }
+        public async Task<string> RemoveLessonFromSavedLessonsAsync(SaveLessonRequestDTO dto,CancellationToken cancellationToken)
+        {
+            var savedLesson = await _dbContext.savedLessons
+                .FirstOrDefaultAsync(sl =>
+                    sl.UserId == dto.userId &&
+                    sl.LessonId == dto.lessonId &&
+                    sl.LanguageId == dto.LanId,
+                    cancellationToken);
+
+            if (savedLesson == null)
+                return "Saved lesson not found!";
+
+            _dbContext.savedLessons.Remove(savedLesson);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return "Lesson removed successfully!";
         }
         public async Task<IEnumerable<SavedLessonResponseDTO>> GetSavedLessonsForUserForLanguageAsync(string userId,int languageId,CancellationToken cancellationToken)
         {
@@ -106,6 +112,28 @@ namespace LanguageApp.Application.Bussiness
 
             return savedLessons;
         }
+        public async Task<LessonDTO> GetLessonByIdAsync(int lessonId,CancellationToken cancellationToken)
+        {
+            var lesson = await _dbContext.Lessons
+                .AsNoTracking()
+                .Where(l => l.Id == lessonId)
+                .Select(l => new LessonDTO
+                {
+                    Id = l.Id,
+                    CategoryId = l.CategoryId,
+                    ChapterId = l.ChapterId,
+                    Title = l.Title,
+                    Content = l.Content,
+                    OrderNumber = l.OrderNumber
+                })
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (lesson == null)
+                return null!;
+
+            return lesson;
+        }
+
 
 
 

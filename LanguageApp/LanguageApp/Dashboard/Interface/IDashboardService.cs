@@ -65,6 +65,8 @@ namespace LanguageApp.Dashboard.Interface
         Task<LessonDTO> UpdateLessonAsync(int lessonId, LessonDTORequest lesson, CancellationToken cancellationToken);
         //Delete Lesson
         Task<bool> DeleteLessonAsync(int lessonId, CancellationToken cancellationToken);
+        Task<string> AddMediaToLessonAsync(int lessonId, IFormFile file, CancellationToken cancellationToken);
+
 
         //================== Questions Management =================//
         // get All Questions
@@ -78,6 +80,8 @@ namespace LanguageApp.Dashboard.Interface
         Task<QuestionDTO> UpdateQuestionAsync(int questionId,QuestionDTORequest question, CancellationToken cancellationToken);
         //Delete Question
         Task<bool> DeleteQuestionAsync(int questionId, CancellationToken cancellationToken);
+
+
 
         //================== Answers Management =================//
         // get All Answers

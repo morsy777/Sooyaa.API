@@ -45,6 +45,21 @@ namespace LanguageApp.Controllers
         }
         #endregion
 
+        #region Remove Lesson from saved lessons
+        [HttpDelete("RemoveSavedLesson")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> RemoveLessonFromSavedLessons(SaveLessonRequestDTO dTO,CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(dTO.userId) || dTO.lessonId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid userId or lessonId" });
+            }
+            var result = await _lessonService.RemoveLessonFromSavedLessonsAsync(dTO,cancellationToken);
+            return Ok(result);
+        }
+        #endregion
+
         #region get saved lessons for user for language
         [HttpGet("GetSavedLessons/user/{userId}/language/{languageId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -57,6 +72,21 @@ namespace LanguageApp.Controllers
             }
             var lessons = await _lessonService.GetSavedLessonsForUserForLanguageAsync(userId, languageId,cancellationToken);
             return Ok(lessons);
+        }
+        #endregion
+
+        #region Get Lesson by Id
+        [HttpGet("GetLesson/{lessonId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetLessonById(int lessonId,CancellationToken cancellationToken)
+        {
+            if (lessonId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid lessonId" });
+            }
+            var lesson = await _lessonService.GetLessonByIdAsync(lessonId,cancellationToken);
+            return Ok(lesson);
         }
         #endregion
 

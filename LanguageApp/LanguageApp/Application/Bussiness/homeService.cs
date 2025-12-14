@@ -13,52 +13,63 @@ namespace LanguageApp.Application.Bussiness
             _dbContext = dbContext;
         }
 
-        public async Task<homePageDTO> GetHomePageDataAsync(string userId, int LanId, CancellationToken cancellationToken)
+        public async Task<homePageDTO> GetHomePageDataAsync(string userId,int lanId,CancellationToken cancellationToken)
         {
-            // Get user + streak
             var user = await _dbContext.Users
-                .Include(u => u.UserStreak)
                 .AsNoTracking()
+                .Include(u => u.UserStreak)
                 .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
 
             if (user == null)
                 return null!;
 
-            // Get user language name based on LanId
-            var userLanguage = await _dbContext.UserLanguages
+            var userLanguageInfo = await _dbContext.UserLanguages
                 .AsNoTracking()
                 .Include(ul => ul.Language)
-                .Where(ul => ul.UserId == userId && ul.LanguageId == LanId)
-                .Select(ul => ul.Language.Name)
-                .FirstOrDefaultAsync(cancellationToken);
-
-            // Get user level based on LanId
-            var userLevel = await _dbContext.UserLanguages
-                .AsNoTracking()
                 .Include(ul => ul.Level)
-                .Where(ul => ul.UserId == userId && ul.LanguageId == LanId)
-                .Select(ul => ul.Level.Name)
+                .Where(ul => ul.UserId == userId && ul.LanguageId == lanId)
+                .Select(ul => new
+                {
+                    ul.Language.Name,
+                    ul.Language.Image,
+                    LevelName = ul.Level.Name
+                })
                 .FirstOrDefaultAsync(cancellationToken);
 
-            // Streak (already included above)
-            int streakScore = user.UserStreak?.CurrentStreak ?? 0;
-
-            // Categories
             var categories = await _dbContext.Categories
                 .AsNoTracking()
+                .Where(c => c.LanguageId == lanId)
                 .Select(c => c.Name)
                 .ToListAsync(cancellationToken);
 
-            // Build DTO
-            var homePageData = new homePageDTO
-            {
-                LanName = userLanguage ?? "Unknown",
-                streakScore = streakScore,
-                userLevel = userLevel ?? "Beginner",
-                Categories = categories
-            };
+            var lessonsQuery = _dbContext.Lessons
+                .AsNoTracking()
+                .Where(l =>
+                    _dbContext.Chapters.Any(ch => ch.Id == l.ChapterId && ch.Level.LanguageId == lanId) ||
+                    _dbContext.Categories.Any(c => c.Id == l.CategoryId && c.LanguageId == lanId));
 
-            return homePageData;
+            var lessonIds = await lessonsQuery
+                .Select(l => l.Id)
+                .ToListAsync(cancellationToken);
+
+            var completedLessonsCount = await _dbContext.UserProgresses
+                .AsNoTracking()
+                .Where(up =>
+                    up.UserId == userId &&
+                    up.IsCompleted &&
+                    lessonIds.Contains(up.LessonId))
+                .CountAsync(cancellationToken);
+
+            return new homePageDTO
+            {
+                LanName = userLanguageInfo?.Name ?? "Unknown",
+                LanFlag = userLanguageInfo?.Image ?? "",
+                userLevel = userLanguageInfo?.LevelName ?? "Beginner",
+                streakScore = user.UserStreak?.CurrentStreak ?? 0,
+                Categories = categories,
+                TotalLessons = lessonIds.Count,
+                CompletedLesson = completedLessonsCount
+            };
         }
 
 
