@@ -297,7 +297,7 @@ public class AuthService(UserManager<ApplicationUser> userManager,
         );
 
         // TODO: Send the email
-        BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "Survey Basket: Email Confirmation", emailBody));
+        BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "Sooyaa App: Email Confirmation", emailBody));
         await Task.CompletedTask;
     }
 
@@ -316,7 +316,7 @@ public class AuthService(UserManager<ApplicationUser> userManager,
 
         );
 
-        BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "Survey Basket:🔔 Change Password", emailBody));
+        BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "SooyaaApp:🔔 Change Password", emailBody));
         await Task.CompletedTask;
     }
 
