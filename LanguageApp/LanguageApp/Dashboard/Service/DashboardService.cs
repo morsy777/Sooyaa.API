@@ -1,6 +1,7 @@
 ﻿using LanguageApp.Dashboard.Interface;
 using LanguageApp.DTOS;
 using LanguageApp.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace LanguageApp.Dashboard.Service
 {
@@ -279,17 +280,23 @@ namespace LanguageApp.Dashboard.Service
         }
         public async Task<LessonDTO> AddLessonAsync(LessonDTORequest lesson, CancellationToken cancellationToken)
         {
-            if (lesson == null || string.IsNullOrWhiteSpace(lesson.Title) || lesson.ChapterId <= 0 || lesson.OrderNumber<=0)
+            // Validate input
+            if (lesson == null|| string.IsNullOrWhiteSpace(lesson.Title)|| lesson.ChapterId <= 0|| lesson.OrderNumber <= 0)
+            {
                 return null!; // invalid input
+            }
 
+            // Check if Chapter exists
             var chapter = await _dbContext.Chapters
                 .FirstOrDefaultAsync(c => c.Id == lesson.ChapterId, cancellationToken);
 
             if (chapter == null)
                 return null!; // chapter not found
 
+            // Trim title
             var lessonName = lesson.Title.Trim();
 
+            // Check for duplicate lesson in the same chapter
             bool exists = await _dbContext.Lessons
                 .AnyAsync(l => l.Title.ToLower() == lessonName.ToLower()
                                && l.ChapterId == lesson.ChapterId,
@@ -301,6 +308,7 @@ namespace LanguageApp.Dashboard.Service
             var ent = lesson.Adapt<Lesson>();
             ent.Title = lessonName;
             ent.ChapterId = lesson.ChapterId;
+            ent.CategoryId = lesson.CategoryId; 
 
             await _dbContext.Lessons.AddAsync(ent, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -535,9 +543,34 @@ namespace LanguageApp.Dashboard.Service
             return true;
         }
 
+        //================== Category Management =================//
+        public async Task<IEnumerable<CategoryDTO>> GetAllCategoriesAsync(CancellationToken cancellationToken)
+        {
+            var categories = await _dbContext.Categories
+             .AsNoTracking()
+             .Select(c => new CategoryDTO
+             {
+                Id = c.Id,
+                Name = c.Name
+             })
+             .ToListAsync(cancellationToken);
 
+            return categories;
+        }
 
+        public async Task<IEnumerable<CategoryDTO>> GetCategoriesByLanIdAsync(int LanId, CancellationToken cancellationToken)
+        {
+            var categories = await _dbContext.Categories
+                .Where(c => c.LanguageId == LanId)
+                .Select(c => new CategoryDTO
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToListAsync(cancellationToken);
 
+            return categories;
+        }
 
 
 

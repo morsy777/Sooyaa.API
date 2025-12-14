@@ -9,5 +9,5 @@ public class Question
     public int? LessonId { get; set; }
     public Lesson Lesson { get; set; } = default!;
 
-    public List<Answer> Answers { get; set; } = new();
+    public ICollection<Answer> Answers { get; set; } = new List<Answer>();
 }

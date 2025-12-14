@@ -459,9 +459,36 @@ namespace LanguageApp.Dashboard.Controller
         #endregion
 
         // ======================================================
-        //                  Admin ENDPOINTS
+        //                  Category ENDPOINTS
         // ======================================================
 
+        #region Get all Categories
+        [HttpGet("getCategories")]
+        [ProducesResponseType(typeof(IEnumerable<CategoryDTO>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllCategories(CancellationToken cancellationToken)
+        {
+            var Categories = await _dashboardService.GetAllCategoriesAsync(cancellationToken);
+            return Ok(Categories);
+        }
+        #endregion
+
+        #region get Category by Language id
+        [HttpGet("getCategoryByLanguageId/{languageId}")]
+        [ProducesResponseType(typeof(IEnumerable<CategoryDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> getCategoryByLanguageId(int languageId, CancellationToken cancellationToken)
+        {
+            if (languageId <= 0)
+                return BadRequest(new { Message = "Invalid languageID." });
+            var Categories = await _dashboardService.GetCategoriesByLanIdAsync(languageId, cancellationToken);
+            return Ok(Categories);
+        }
+        #endregion
+
+        // ======================================================
+        //                  Admin ENDPOINTS
+        // ======================================================
+        #region prompoteToAdmin
         [HttpPut("prompoteToAdmin/{userId}")]
         public async Task<IActionResult> PrompoteToAdmin(string userId)
         {
@@ -469,6 +496,6 @@ namespace LanguageApp.Dashboard.Controller
 
             return isAdded ? NoContent() : BadRequest("Invalid User Id");
         }
-
+        #endregion
     }
 }

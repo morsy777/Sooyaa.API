@@ -3,24 +3,44 @@
   "WorkspaceRootPath": "D:\\Language-app\\LanguageApp\\LanguageApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\application\\bussiness\\languageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:application\\bussiness\\languageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\persistence\\entitiesconfiguration\\wordlistconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:persistence\\entitiesconfiguration\\wordlistconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\application\\ibussiness\\ilanguageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:application\\ibussiness\\ilanguageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\controllers\\languagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:controllers\\languagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\dtos\\uploadlanguageimagerequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:dtos\\uploadlanguageimagerequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\entities\\language.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:entities\\language.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\dtos\\uploadlanguageimagerequestvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:dtos\\uploadlanguageimagerequestvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\mapping\\mappinghomepage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:mapping\\mappinghomepage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\application\\bussiness\\homeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:application\\bussiness\\homeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|d:\\language-app\\languageapp\\languageapp\\application\\bussiness\\languageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{87041398-62C1-8D78-B512-37DE781C5205}|LanguageApp.csproj|solutionrelative:application\\bussiness\\languageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +50,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 13,
           "Children": [
             {
               "$type": "Bookmark",
@@ -58,33 +78,111 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\Services\\AuthService.cs",
-              "RelativeDocumentMoniker": "Services\\AuthService.cs",
-              "ToolTip": "D:\\Language-app\\LanguageApp\\LanguageApp\\Services\\AuthService.cs",
-              "RelativeToolTip": "Services\\AuthService.cs",
-              "ViewState": "AgIAAH0AAAAAAAAAAAAgwI4AAAAyAAAAAAAAAA==",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\Language-app\\LanguageApp\\LanguageApp\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAACsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-14T13:22:25.16Z",
+              "WhenOpened": "2025-12-14T14:17:52.754Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "WordListConfiguration.cs",
-              "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\Persistence\\EntitiesConfiguration\\WordListConfiguration.cs",
-              "RelativeDocumentMoniker": "Persistence\\EntitiesConfiguration\\WordListConfiguration.cs",
-              "ToolTip": "D:\\Language-app\\LanguageApp\\LanguageApp\\Persistence\\EntitiesConfiguration\\WordListConfiguration.cs",
-              "RelativeToolTip": "Persistence\\EntitiesConfiguration\\WordListConfiguration.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAfAAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
+              "ToolTip": "D:\\Language-app\\LanguageApp\\LanguageApp\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "Controllers\\AccountController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAABSAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-14T13:18:04.55Z",
+              "WhenOpened": "2025-12-14T14:09:32.012Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "LanguageController.cs",
+              "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\Controllers\\LanguageController.cs",
+              "RelativeDocumentMoniker": "Controllers\\LanguageController.cs",
+              "ToolTip": "D:\\Language-app\\LanguageApp\\LanguageApp\\Controllers\\LanguageController.cs",
+              "RelativeToolTip": "Controllers\\LanguageController.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAQwCIAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-14T13:53:18.774Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Language.cs",
+              "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\Entities\\Language.cs",
+              "RelativeDocumentMoniker": "Entities\\Language.cs",
+              "ToolTip": "D:\\Language-app\\LanguageApp\\LanguageApp\\Entities\\Language.cs",
+              "RelativeToolTip": "Entities\\Language.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-14T13:37:50.71Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "UploadLanguageImageRequestDto.cs",
+              "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\DTOS\\UploadLanguageImageRequestDto.cs",
+              "RelativeDocumentMoniker": "DTOS\\UploadLanguageImageRequestDto.cs",
+              "ToolTip": "D:\\Language-app\\LanguageApp\\LanguageApp\\DTOS\\UploadLanguageImageRequestDto.cs",
+              "RelativeToolTip": "DTOS\\UploadLanguageImageRequestDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-14T13:33:52.935Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "ILanguageService.cs",
+              "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\Application\\IBussiness\\ILanguageService.cs",
+              "RelativeDocumentMoniker": "Application\\IBussiness\\ILanguageService.cs",
+              "ToolTip": "D:\\Language-app\\LanguageApp\\LanguageApp\\Application\\IBussiness\\ILanguageService.cs",
+              "RelativeToolTip": "Application\\IBussiness\\ILanguageService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAgAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-14T13:33:27.663Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "Services\\UserService.cs",
+              "ToolTip": "D:\\Language-app\\LanguageApp\\LanguageApp\\Services\\UserService.cs",
+              "RelativeToolTip": "Services\\UserService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-14T13:33:02.03Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "LanguageService.cs",
+              "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\Application\\Bussiness\\LanguageService.cs",
+              "RelativeDocumentMoniker": "Application\\Bussiness\\LanguageService.cs",
+              "ToolTip": "D:\\Language-app\\LanguageApp\\LanguageApp\\Application\\Bussiness\\LanguageService.cs",
+              "RelativeToolTip": "Application\\Bussiness\\LanguageService.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAQwCMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-14T13:14:50.299Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "MappingHomePage.cs",
               "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\Mapping\\MappingHomePage.cs",
               "RelativeDocumentMoniker": "Mapping\\MappingHomePage.cs",
@@ -92,34 +190,19 @@
               "RelativeToolTip": "Mapping\\MappingHomePage.cs",
               "ViewState": "AgIAAAQAAAAAAAAAAAAMwA0AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-14T13:15:31.173Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-14T13:15:31.173Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "homeService.cs",
-              "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\Application\\Bussiness\\homeService.cs",
-              "RelativeDocumentMoniker": "Application\\Bussiness\\homeService.cs",
-              "ToolTip": "D:\\Language-app\\LanguageApp\\LanguageApp\\Application\\Bussiness\\homeService.cs",
-              "RelativeToolTip": "Application\\Bussiness\\homeService.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAqwBoAAAAyAAAAAAAAAA==",
+              "DocumentIndex": 8,
+              "Title": "UploadLanguageImageRequestValidator.cs",
+              "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\DTOS\\UploadLanguageImageRequestValidator.cs",
+              "RelativeDocumentMoniker": "DTOS\\UploadLanguageImageRequestValidator.cs",
+              "ToolTip": "D:\\Language-app\\LanguageApp\\LanguageApp\\DTOS\\UploadLanguageImageRequestValidator.cs",
+              "RelativeToolTip": "DTOS\\UploadLanguageImageRequestValidator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-14T13:15:08.423Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "LanguageService.cs",
-              "DocumentMoniker": "D:\\Language-app\\LanguageApp\\LanguageApp\\Application\\Bussiness\\LanguageService.cs",
-              "RelativeDocumentMoniker": "Application\\Bussiness\\LanguageService.cs",
-              "ToolTip": "D:\\Language-app\\LanguageApp\\LanguageApp\\Application\\Bussiness\\LanguageService.cs",
-              "RelativeToolTip": "Application\\Bussiness\\LanguageService.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAmwBIAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-14T13:14:50.299Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-14T13:27:47.473Z"
             }
           ]
         }

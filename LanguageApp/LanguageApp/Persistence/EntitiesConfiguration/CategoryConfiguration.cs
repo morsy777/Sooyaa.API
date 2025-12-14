@@ -12,5 +12,11 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder
             .HasIndex(x => x.Name)
             .IsUnique();
+
+
+        builder.HasOne(x => x.Language)
+            .WithMany(x => x.Categories)
+            .HasForeignKey(x => x.LanguageId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

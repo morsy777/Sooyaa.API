@@ -18,16 +18,19 @@ namespace LanguageApp.Controllers
         }
 
         #region Get Home Page Data
-        [HttpGet("getHomeData/{userId}")]
+        [HttpGet("getHomeData/{userId}/{LanId}")]
         [ProducesResponseType(typeof(homePageDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetHomePageData(string userId,CancellationToken cancellationToken)
+        public async Task<IActionResult> GetHomePageData(string userId,int LanId, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(userId))
                 return BadRequest(new {Message = "UserId is required." });
 
-            var result = await _homeService.GetHomePageDataAsync(userId, cancellationToken);
+            if (LanId<=0)
+                return BadRequest(new { Message = "LanId is Invalid." });
+
+            var result = await _homeService.GetHomePageDataAsync(userId,LanId ,cancellationToken);
 
             if (result is null)
                 return NotFound(new {Message = $"User with Id '{userId}' was not found." });

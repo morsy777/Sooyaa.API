@@ -34,6 +34,6 @@ public class ChapterConfiguration : IEntityTypeConfiguration<Chapter>
             .HasOne(x => x.Level)
             .WithMany(x => x.Chapters)
             .HasForeignKey(x => x.LevelId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
