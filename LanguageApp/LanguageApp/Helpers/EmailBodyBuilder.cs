@@ -1,26 +1,43 @@
-﻿namespace LanguageApp.Helpers;
+﻿
 
-public static class EmailBodyBuilder
+namespace LanguageApp.Helpers
 {
-    /// TODO: Create The function that generate the email body
-    /// and take two parameters, one for template name and one 
-    /// as dict for replacing the placeholder with the value.
-    
-    public static string GenerateEmailBody(string template, Dictionary<string, string> templateModel)
+    public class EmailBodyBuilder
     {
-        // TODO: init var for the path of html template
-        var templatePath = $"{Directory.GetCurrentDirectory()}/Template/{template}.html";
+        private readonly IWebHostEnvironment _env;
 
-        // TODO: read the template using stream reader and close stream
-        var streamReader = new StreamReader(templatePath);
-        var body = streamReader.ReadToEnd();
-        streamReader.Close();
+        public EmailBodyBuilder(IWebHostEnvironment env)
+        {
+            _env = env;
+        }
 
-        // TODO: replace each placeholder in the template with the corresponding value from the templateModel
-        foreach (var item in templateModel)
-            body = body.Replace(item.Key, item.Value);
+        /// <summary>
+        /// Generates the email body from a template and replaces placeholders with values.
+        /// </summary>
+        /// <param name="templateName">The template file name without extension</param>
+        /// <param name="templateModel">Dictionary of placeholders and their replacement values</param>
+        /// <returns>Final email body as string</returns>
+        public string GenerateEmailBody(string templateName, Dictionary<string, string> templateModel)
+        {
+            // Build the path dynamically relative to wwwroot
+            var templatePath = Path.Combine(_env.WebRootPath, "Template", $"{templateName}.html");
 
-        return body;
+            if (!File.Exists(templatePath))
+                throw new FileNotFoundException($"Email template not found at {templatePath}");
+
+            string body;
+            using (var reader = new StreamReader(templatePath))
+            {
+                body = reader.ReadToEnd();
+            }
+
+            // Replace placeholders in the template
+            foreach (var kvp in templateModel)
+            {
+                body = body.Replace(kvp.Key, kvp.Value);
+            }
+
+            return body;
+        }
     }
-
 }

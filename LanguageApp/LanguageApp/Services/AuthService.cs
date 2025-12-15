@@ -5,7 +5,9 @@ public class AuthService(UserManager<ApplicationUser> userManager,
     IJwtProvider jwtProvider,
     ILogger<AuthService> logger,
     IEmailSender emailSender,
-    IHttpContextAccessor httpContextAccessor) : IAuthService
+    IHttpContextAccessor httpContextAccessor,
+    IConfiguration configuration,
+    IWebHostEnvironment env) : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
@@ -13,13 +15,14 @@ public class AuthService(UserManager<ApplicationUser> userManager,
     private readonly ILogger<AuthService> _logger = logger;
     private readonly IEmailSender _emailSender = emailSender;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
-
+    private readonly IConfiguration _configuration = configuration;
+    private readonly IWebHostEnvironment _env = env;
     private readonly int _refreshTokenExpireDays = 14;
 
     public async Task<Result<AuthResponse>> GetTokenAsync(string email, string password,
         CancellationToken cancellation = default)
     {
-        // Check user by using email?
+        // Check user by using email
         var user = await _userManager.FindByEmailAsync(email);
 
         if (user is null)
@@ -32,8 +35,8 @@ public class AuthService(UserManager<ApplicationUser> userManager,
             // Generate JWT Token
             var (token, expiresIn) = _jwtProvider.GenerateToken(user);
 
-            // Call Refresh Token Genrator Function
-            var refreshToken = GenerateRefreshToke();
+            // Call Refresh Token Generator Function
+            var refreshToken = GenerateRefreshToken();
             var refreshTokenExpiration = DateTime.UtcNow.AddDays(_refreshTokenExpireDays);
 
             // Add Refresh Token to DB
@@ -86,8 +89,8 @@ public class AuthService(UserManager<ApplicationUser> userManager,
         // Generate New JWT Token
         var (newToken, expiresIn) = _jwtProvider.GenerateToken(user);
 
-        // Call Refresh Token Genrator Function to Generate New refresh token
-        var newRefreshToken = GenerateRefreshToke();
+        // Call Refresh Token Generator Function to Generate New refresh token
+        var newRefreshToken = GenerateRefreshToken();
         var refreshTokenExpiration = DateTime.UtcNow.AddDays(_refreshTokenExpireDays);
 
         // Add Refresh Token to DB
@@ -138,97 +141,182 @@ public class AuthService(UserManager<ApplicationUser> userManager,
         return Result.Success();
     }
 
-    public async Task<Result> RegisterAsync(RegisterRequest request,CancellationToken cancellation = default)
+    public async Task<Result> RegisterAsync(RegisterRequest request, CancellationToken cancellation = default)
     {
-        // TODO: Check if the email already exists
-        var emailIsExist = await _userManager.Users.AnyAsync(x => x.Email == request.Email, cancellation);
-
-        // TODO: If not exist, map the registration model to the ApplicationUser entity
-        if (emailIsExist)
-            return Result.Failure<AuthResponse>(UserErrors.DuplicatedEmail);
-
-        var user = request.Adapt<ApplicationUser>();
-
-        // TODO: Create the new user using UserManager
-        var result = await _userManager.CreateAsync(user, request.Password);
-
-        // TODO: If creation succeeded, generate Access Token, Refresh Token and return them
-        if(result.Succeeded)
+        try
         {
-            // TODO: Generat Email Confirmation Token and Encode it to BaseURL
+            // 1️⃣ Check if email exists
+            var emailIsExist = await _userManager.Users
+                .AnyAsync(x => x.Email == request.Email, cancellation);
+
+            if (emailIsExist)
+                return Result.Failure<AuthResponse>(UserErrors.DuplicatedEmail);
+
+            // 2️⃣ Map request to ApplicationUser
+            var user = request.Adapt<ApplicationUser>();
+
+            // 3️⃣ Create user
+            var result = await _userManager.CreateAsync(user, request.Password);
+
+            if (!result.Succeeded)
+            {
+                var error = result.Errors.First();
+                return Result.Failure(new Error(
+                    error.Code,
+                    error.Description,
+                    StatusCodes.Status401Unauthorized));
+            }
+
+            // 4️⃣ Generate email confirmation token
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-            // TODO: Test The Code using Logging
-            _logger.LogInformation($"Confirmation code: {code}");
+            _logger.LogInformation("Email confirmation code generated for user {UserId}", user.Id);
 
-            // TODO: Send email
-            await SendConfirmationEmail(user, code);
+            // 5️⃣ Try sending confirmation email (DO NOT break registration)
+            try
+            {
+                await SendConfirmationEmail(user, code);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "Failed to send confirmation email to {Email}",
+                    user.Email);
+
+                // Optional: return success but tell frontend email failed
+                return Result.Success("User created, but email could not be sent.");
+            }
 
             return Result.Success();
         }
+        catch (Exception ex)
+        {
+            // 6️⃣ Catch unexpected errors (DB, config, Hangfire, SMTP)
+            _logger.LogCritical(ex,
+                "Unexpected error during registration for {Email}",
+                request.Email);
 
-        // TODO: Return Failure
-        var error = result.Errors.First();
-
-        return Result.Failure(new Error(error.Code, error.Description, StatusCodes.Status401Unauthorized));
+            return Result.Failure(new Error(
+                "RegisterFailed",
+                "An unexpected error occurred during registration.",
+                StatusCodes.Status500InternalServerError));
+        }
     }
 
     public async Task<Result> ConfirmEmailAsync(ConfirmEmailRequest request)
     {
-        // TODO: Check UserId by using UserManager
-        if(await _userManager.FindByIdAsync(request.UserId) is not { } user)
+        _logger.LogInformation("=== EMAIL CONFIRMATION DEBUG START ===");
+        _logger.LogInformation("UserId: {UserId}", request.UserId);
+        _logger.LogInformation("Code length: {Length}", request.Code?.Length ?? 0);
+        _logger.LogInformation("Code (first 50 chars): {Code}",
+            request.Code?.Substring(0, Math.Min(50, request.Code?.Length ?? 50)) ?? "NULL");
+
+        // 1. Find user by ID
+        var user = await _userManager.FindByIdAsync(request.UserId);
+        if (user is null)
+        {
+            _logger.LogError("❌ STEP 1 FAILED: User not found with ID: {UserId}", request.UserId);
             return Result.Failure(UserErrors.InvalidCode);
+        }
 
-        // TODO: Check if the email is already confirmed
+        _logger.LogInformation("✓ STEP 1 PASSED: User found - Email: {Email}, EmailConfirmed: {EmailConfirmed}",
+            user.Email, user.EmailConfirmed);
+
+        // 2. Check if email is already confirmed
         if (user.EmailConfirmed)
+        {
+            _logger.LogWarning("❌ STEP 2 FAILED: Email already confirmed for user {UserId}", user.Id);
             return Result.Failure(UserErrors.DuplicatedConfirmation);
+        }
 
-        // TODO: Decode the code by using WebEncoder.Base64UrlDecode(code) and then convert it to string
-        var code = request.Code;
+        _logger.LogInformation("✓ STEP 2 PASSED: Email not yet confirmed");
 
+        // 3. Decode the Base64Url encoded token
+        string code;
         try
         {
-            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
+            _logger.LogInformation("STEP 3: Attempting to decode token...");
+            var codeBytes = WebEncoders.Base64UrlDecode(request.Code);
+            code = Encoding.UTF8.GetString(codeBytes);
+            _logger.LogInformation("✓ STEP 3 PASSED: Token decoded. Decoded length: {Length}", code.Length);
+            _logger.LogInformation("Decoded token (first 50 chars): {Code}", code.Substring(0, Math.Min(50, code.Length)));
         }
-        catch (FormatException)
+        catch (FormatException ex)
         {
-            Result.Failure(UserErrors.InvalidCode);
+            _logger.LogError(ex, "❌ STEP 3 FAILED: Failed to decode token");
+            return Result.Failure(UserErrors.InvalidCode);
         }
 
-        // TODO: Confrim the email by using UserManager
+        // 4. Confirm email using UserManager
+        _logger.LogInformation("STEP 4: Calling UserManager.ConfirmEmailAsync...");
         var result = await _userManager.ConfirmEmailAsync(user, code);
 
-        // TODO: If the email confirmed successfully, return Success else return Failure
-        if(result.Succeeded) 
+        _logger.LogInformation("STEP 4 Result: Succeeded={Succeeded}, ErrorCount={ErrorCount}",
+            result.Succeeded, result.Errors.Count());
+
+        // 5. Return result
+        if (result.Succeeded)
+        {
+            _logger.LogInformation("✓✓✓ EMAIL CONFIRMED SUCCESSFULLY for user {UserId} ({Email})",
+                user.Id, user.Email);
             return Result.Success();
+        }
 
-        var error = result.Errors.First();
+        // Log all Identity errors for debugging
+        _logger.LogError("❌ STEP 4 FAILED: Identity rejected the token. Errors:");
+        foreach (var error in result.Errors)
+        {
+            _logger.LogError("  - ERROR CODE: {Code}, DESCRIPTION: {Description}", error.Code, error.Description);
+        }
 
-        return Result.Failure(new Error(error.Code, error.Description, StatusCodes.Status400BadRequest));
+        var firstError = result.Errors.First();
+        return Result.Failure(new Error(
+            firstError.Code,
+            firstError.Description,
+            StatusCodes.Status400BadRequest));
     }
 
     public async Task<Result> ResendConfirmationEmailAsync(ResendConfirmationEmailRequest request)
     {
-        // TODO: Find user by using email
-        if(await _userManager.FindByEmailAsync(request.Email) is not { } user)
+        _logger.LogInformation("Resend confirmation email requested for {Email}", request.Email);
+
+        // 1. Find user by email
+        if (await _userManager.FindByEmailAsync(request.Email) is not { } user)
+        {
+            // Don't reveal if user exists or not for security
+            _logger.LogInformation("User not found for email {Email}", request.Email);
             return Result.Success();
+        }
 
-        // TODO: Check if email already confirmed
+        // 2. Check if email already confirmed
         if (user.EmailConfirmed)
+        {
+            _logger.LogInformation("Email already confirmed for {Email}", request.Email);
             return Result.Failure(UserErrors.DuplicatedConfirmation);
+        }
 
-        // TODO: Generate new code 
+        // 3. Generate new confirmation token
         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-        // TODO: logg it for testing
-        _logger.LogInformation($"Reset Code: {code}");
+        _logger.LogInformation("New confirmation token generated for user {UserId}", user.Id);
 
-        // TODO: Send Email
-        await SendConfirmationEmail(user, code);
-
-        return Result.Success();
+        // 4. Send confirmation email
+        try
+        {
+            await SendConfirmationEmail(user, code);
+            _logger.LogInformation("Confirmation email resent to {Email}", user.Email);
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to resend confirmation email to {Email}", user.Email);
+            return Result.Failure(new Error(
+                "EmailSendFailed",
+                "Failed to send confirmation email. Please try again.",
+                StatusCodes.Status500InternalServerError));
+        }
     }
 
     public async Task<Result> SendResetPasswordCodeAsync(string email)
@@ -242,11 +330,21 @@ public class AuthService(UserManager<ApplicationUser> userManager,
         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-        _logger.LogInformation(code);
+        _logger.LogInformation("Password reset code generated for user {UserId}", user.Id);
 
-        await SendResetPasswordEmail(user, code);
-
-        return Result.Success();
+        try
+        {
+            await SendResetPasswordEmail(user, code);
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send password reset email to {Email}", user.Email);
+            return Result.Failure(new Error(
+                "EmailSendFailed",
+                "Failed to send password reset email.",
+                StatusCodes.Status500InternalServerError));
+        }
     }
 
     public async Task<Result> ResetPasswordAsync(ResetPasswordRequest request)
@@ -265,59 +363,93 @@ public class AuthService(UserManager<ApplicationUser> userManager,
         }
         catch (FormatException)
         {
-            result = IdentityResult.Failed(_userManager.ErrorDescriber.InvalidToken()); // This line from MS Doc
+            result = IdentityResult.Failed(_userManager.ErrorDescriber.InvalidToken());
         }
 
-        if(result.Succeeded)
+        if (result.Succeeded)
+        {
+            _logger.LogInformation("Password reset successful for user {UserId}", user.Id);
             return Result.Success();
+        }
 
         var error = result.Errors.First();
-
         return Result.Failure(new Error(error.Code, error.Description, StatusCodes.Status401Unauthorized));
     }
 
     // Generate Refresh Token
-    private string GenerateRefreshToke()
+    private string GenerateRefreshToken()
     {
         return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
     }
 
     private async Task SendConfirmationEmail(ApplicationUser user, string code)
     {
-        // TODO: Take the frontend origin from the request headers
-        var origin = _httpContextAccessor.HttpContext?.Request.Headers.Origin;
+        var baseUrl = _configuration["AppUrl"]?.TrimEnd('/');
 
-        // TODO: Generate email body
-        var emailBody = EmailBodyBuilder.GenerateEmailBody("EmailConfirmation",
-            templateModel: new Dictionary<string, string>
-            {
-                    {"{{name}}", user.FirstName},
-                    {"{{action_url}}", $"{origin}/auth/emailConfirmation?userId={user.Id}&code={code}"}
-            }
-        );
+        if (string.IsNullOrEmpty(baseUrl))
+        {
+            _logger.LogError("AppUrl configuration is missing");
+            throw new InvalidOperationException("AppUrl is not configured in appsettings.json");
+        }
 
-        // TODO: Send the email
-        BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "Sooyaa App: Email Confirmation", emailBody));
+        // Build verification URL
+        var verifyUrl = $"{baseUrl}/auth/confirm-email?userId={user.Id}&code={code}";
+
+        _logger.LogInformation("Sending confirmation email to {Email}", user.Email);
+
+        // Use instance-based EmailBodyBuilder with IWebHostEnvironment
+        var emailBodyBuilder = new EmailBodyBuilder(_env); // _env must be injected in the controller
+        var emailBody = emailBodyBuilder.GenerateEmailBody("EmailConfirmation", new Dictionary<string, string>
+    {
+        { "{{name}}", user.FirstName },
+        { "{{action_url}}", verifyUrl }
+    });
+
+        // Enqueue email via Hangfire
+        BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(
+            user.Email!,
+            "Sooyaa App: Email Confirmation",
+            emailBody));
+
         await Task.CompletedTask;
     }
 
     private async Task SendResetPasswordEmail(ApplicationUser user, string code)
     {
-        // TODO: Take the frontend origin from the request headers
-        var origin = _httpContextAccessor.HttpContext?.Request.Headers.Origin;
+        var baseUrl = _configuration["AppUrl"]?.TrimEnd('/');
 
-        // TODO: Generate email body
-        var emailBody = EmailBodyBuilder.GenerateEmailBody("ForgetPassword",
-            templateModel: new Dictionary<string, string>
+        if (string.IsNullOrEmpty(baseUrl))
+        {
+            _logger.LogError("AppUrl configuration is missing");
+            throw new InvalidOperationException("AppUrl is not configured in appsettings.json");
+        }
+
+        // URL to static reset password page
+        var resetUrl =
+            $"{baseUrl}/password/reset-password.html?email={user.Email}&code={code}";
+
+        _logger.LogInformation("Sending reset password email to {Email}", user.Email);
+
+        // ✅ Use instance-based EmailBodyBuilder (same as confirmation)
+        var emailBodyBuilder = new EmailBodyBuilder(_env);
+
+        var emailBody = emailBodyBuilder.GenerateEmailBody(
+            "ForgetPassword",
+            new Dictionary<string, string>
             {
-                    {"{{name}}", user.FirstName},
-                    {"{{action_url}}", $"{origin}/auth/forgetPassword?email={user.Email}&code={code}"}
-            }
+            { "{{name}}", user.FirstName },
+            { "{{action_url}}", resetUrl }
+            });
 
-        );
+        // Enqueue via Hangfire
+        BackgroundJob.Enqueue(() =>
+            _emailSender.SendEmailAsync(
+                user.Email!,
+                "Sooyaa App: Reset Password",
+                emailBody));
 
-        BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "SooyaaApp:🔔 Change Password", emailBody));
         await Task.CompletedTask;
     }
+
 
 }

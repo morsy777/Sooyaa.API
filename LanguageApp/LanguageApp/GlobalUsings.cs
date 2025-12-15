@@ -52,4 +52,6 @@ global using HangfireBasicAuthenticationFilter;
 
 global using CloudinaryDotNet;
 
+global using SendGrid;
+global using SendGrid.Helpers.Mail;
 

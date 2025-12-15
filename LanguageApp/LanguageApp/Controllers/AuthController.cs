@@ -1,4 +1,5 @@
-﻿namespace LanguageApp.Controllers;
+﻿// AuthController.cs - Fixed version
+namespace LanguageApp.Controllers;
 
 [Route("[controller]")]
 [ApiController]
@@ -10,7 +11,6 @@ public class AuthController(IAuthService authService) : ControllerBase
     public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request, CancellationToken cancellationToken)
     {
         var authResult = await _authService.GetTokenAsync(request.Email, request.Password, cancellationToken);
-        
         return authResult.IsSuccess ? Ok(authResult.Value) : authResult.ToProblem();
     }
 
@@ -18,7 +18,6 @@ public class AuthController(IAuthService authService) : ControllerBase
     public async Task<IActionResult> RefreshAsync([FromBody] RefreshTokenRequest request, CancellationToken cancellationToken)
     {
         var authResult = await _authService.GetRefreshTokenAsync(request.Token, request.RefreshToken, cancellationToken);
-
         return authResult.IsSuccess ? Ok(authResult.Value) : authResult.ToProblem();
     }
 
@@ -26,7 +25,6 @@ public class AuthController(IAuthService authService) : ControllerBase
     public async Task<IActionResult> RevokeRefreshToken([FromBody] RefreshTokenRequest request, CancellationToken cancellationToken)
     {
         var result = await _authService.RevokeRefreshTokenAsync(request.Token, request.RefreshToken, cancellationToken);
-
         return result.IsSuccess ? Ok() : result.ToProblem();
     }
 
@@ -34,23 +32,29 @@ public class AuthController(IAuthService authService) : ControllerBase
     public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken cancellationToken)
     {
         var authResult = await _authService.RegisterAsync(request, cancellationToken);
-
         return authResult.IsSuccess ? Ok() : authResult.ToProblem();
     }
 
-    [HttpPost("confirm-email")]
-    public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailRequest request, CancellationToken cancellationToken)
+    // ✅ MAIN FIX: Single GET endpoint that handles email confirmation from link clicks
+    [HttpGet("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, [FromQuery] string code)
     {
-        var authResult = await _authService.ConfirmEmailAsync(request);
+        if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code))
+            return Redirect("/email/verified.html?status=invalid");
 
-        return authResult.IsSuccess ? Ok() : authResult.ToProblem();
+        var request = new ConfirmEmailRequest(userId, code);
+        var result = await _authService.ConfirmEmailAsync(request);
+
+        if (result.IsSuccess)
+            return Redirect("/email/verified.html?status=success");
+        else
+            return Redirect("/email/verified.html?status=failed");
     }
 
     [HttpPost("resend-confirmation-email")]
     public async Task<IActionResult> ResendConfirmationEmail([FromBody] ResendConfirmationEmailRequest request, CancellationToken cancellationToken)
     {
         var authResult = await _authService.ResendConfirmationEmailAsync(request);
-
         return authResult.IsSuccess ? Ok() : authResult.ToProblem();
     }
 
@@ -58,7 +62,6 @@ public class AuthController(IAuthService authService) : ControllerBase
     public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordRequest request, CancellationToken cancellationToken)
     {
         var authResult = await _authService.SendResetPasswordCodeAsync(request.Email);
-
         return authResult.IsSuccess ? Ok() : authResult.ToProblem();
     }
 
@@ -66,11 +69,9 @@ public class AuthController(IAuthService authService) : ControllerBase
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request, CancellationToken cancellationToken)
     {
         var authResult = await _authService.ResetPasswordAsync(request);
-
         return authResult.IsSuccess ? Ok() : authResult.ToProblem();
     }
 
-    // Return Refresh Token in Cookies
     private void SetRefreshTokenCookies(string refreshToken, DateTime expires)
     {
         var cookieOptions = new CookieOptions
@@ -78,7 +79,9 @@ public class AuthController(IAuthService authService) : ControllerBase
             HttpOnly = true,
             Expires = expires.ToLocalTime()
         };
-
         Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
     }
+
+
+
 }

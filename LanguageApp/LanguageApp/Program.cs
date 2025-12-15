@@ -15,6 +15,7 @@ app.UseSwaggerUI();
 
 // HTTPS Redirect
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 // ------------------------------------------
 // CORS MUST COME BEFORE AUTH & CONTROLLERS
@@ -42,6 +43,5 @@ app.UseHangfireDashboard("/jobs", new DashboardOptions
 // Map Controllers
 app.MapControllers();
 
-app.UseStaticFiles();
 
 app.Run();
